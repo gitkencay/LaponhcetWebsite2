@@ -22,7 +22,7 @@ public class UserAccessAction extends ActionBase {
 		List<DTOBase> userGroupList = (List<DTOBase>) getSessionAttribute(UserGroupDTO.SESSION_USER_GROUP_LIST);
 		user.setUserName(getRequestString("txtUserName"));
 		user.setPassword(getRequestString("txtPassword"));
-		user.setUserGroup((UserGroupDTO) DTOUtil.getObjById(userGroupList, getRequestInt("cboUserGroup")));
+		user.setUserGroupCodes(((UserGroupDTO) DTOUtil.getObjById(userGroupList, getRequestInt("cboUserGroup"))).getCode());
 		// Temporary Birthday to avoid error
 		user.setBirthDate(DateTimeUtil.getStrToDateTime("1970-01-01", "yyyy-MM-dd"));
 		// New User Link List

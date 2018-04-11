@@ -3,6 +3,8 @@ package com.laponhcet.util;
 import java.util.Date;
 import java.util.List;
 
+import com.laponhcet.dao.AcademicYearDAO;
+import com.laponhcet.dao.SemesterDAO;
 import com.laponhcet.dto.AcademicYearDTO;
 import com.laponhcet.dto.SemesterDTO;
 import com.mytechnopal.Pagination;
@@ -11,8 +13,6 @@ import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.base.DataAndSessionBase;
 import com.mytechnopal.util.DTOUtil;
 import com.mytechnopal.util.DateTimeUtil;
-import com.scholastech.dao.AcademicYearDAO;
-import com.scholastech.dao.SemesterDAO;
 
 public class SemesterUtil extends DataAndSessionBase {
 	private static final long serialVersionUID = 1L;

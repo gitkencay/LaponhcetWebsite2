@@ -19,7 +19,7 @@
 				</div>
 				<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-3 ", true, "Username", "Username", "UserName", userAccess.getUserName(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
 				<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-3", true, "Password", "Password", "Password", userAccess.getPassword(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
-				<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-3 m-b", true, "Group", "UserGroup", userGroupList, userAccess.getUserGroup(), "", "", "") %>
+				<%//=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-3 m-b", true, "Group", "UserGroup", userGroupList, userAccess.getUserGroupCodes(), "", "", "") %>
 				<%=new RadioButtonWebControl().getRadioButtonWebControl(sessionInfo, "col-sm-3", true, "Status", "Status", new String[] {"Active", "Inactive"}, userAccess.isActive()?"Active":"Inactive", new String[] {"Active", "Inactive"}, "", false) %>
 				<div class="col-sm-12">
 					<div class="panel panel-default">

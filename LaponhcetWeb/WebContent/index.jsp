@@ -202,7 +202,7 @@ if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FAC
 }
 else {
 %>
-<body <%=user.getUserGroup().getCode().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)?"id='page-top' class='landing-page no-skin-config'":""%>>
+<body <%=user.getUserGroupCodes().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)?"id='page-top' class='landing-page no-skin-config'":""%>>
 <%	
 }
 %>
@@ -211,7 +211,7 @@ else {
 		<input id="txtSelectedLink" name="txtSelectedLink" type="hidden"
 			value="" />
 		<%
-if(user.getUserGroup().getCode().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)) {
+if(user.getUserGroupCodes().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)) {
 	if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG)) { //FaceKeeper
 %>
 		<div class="row">

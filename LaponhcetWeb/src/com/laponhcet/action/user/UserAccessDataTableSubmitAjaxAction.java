@@ -53,7 +53,7 @@ public class UserAccessDataTableSubmitAjaxAction extends AjaxActionBase {
 				jsonObjDetails.put("lastName", user.getLastName());
 				jsonObjDetails.put("firstName", user.getFirstName());
 				jsonObjDetails.put("middleName", user.getMiddleName());
-				jsonObjDetails.put("group", user.getUserGroup().getName());
+				jsonObjDetails.put("group", user.getUserGroupCodes());
 				//jsonObjDetails.put("button", pagination.getRecordButtonStr(sessionInfo, user.getId()).replace("~", ","));
 				jsonObjDetails.put("button", UserAccessUtil.getRecordButtonStr(sessionInfo, user));
 				jsonArray.put(jsonObjDetails);

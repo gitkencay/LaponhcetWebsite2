@@ -20,6 +20,8 @@ public class FeeStudentSpecificDAO extends DAOBase {
 	private String qryFeeStudentSpecificDelete = "FEE_STUDENT_SPECIFIC_DELETE";
 	private String qryFeeStudentSpecificList = "FEE_STUDENT_SPECIFIC_LIST";
 	private String qryFeeStudentSpecificListSearchByStudent = "FEE_STUDENT_SPECIFIC_LIST_SEARCHBY_STUDENT";
+	private String qryFeeStudentSpecificListByStudentCodeAcademicYearCode = "FEE_STUDENT_SPECIFIC_LIST_BY_STUDENTCODEACADEMICYEARCODE";
+	private String qryFeeStudentSpecificListByStudentCodeSemesterCode = "FEE_STUDENT_SPECIFIC_LIST_BY_STUDENTCODESEMESTERCODE";
 	
 	@Override
 	public void executeAdd(DTOBase obj) {
@@ -57,6 +59,20 @@ public class FeeStudentSpecificDAO extends DAOBase {
 
 	public List<DTOBase> getFeeStudentSpecificListSearchByStudent(String searchValue) {
 		return getDTOList(qryFeeStudentSpecificListSearchByStudent, "%" + searchValue + "%");
+	}
+	
+	public List<DTOBase> getFeeStudentSpecificListByStudentCodeAcademicYearCode(String studentCode, String academicYearCode) {
+		List<Object> paramList = new ArrayList<Object>();
+		paramList.add(studentCode);
+		paramList.add(academicYearCode);
+		return getDTOList(qryFeeStudentSpecificListByStudentCodeAcademicYearCode, paramList);
+	}
+	
+	public List<DTOBase> getFeeStudentSpecificListByStudentCodeSemesterCode(String studentCode, String semesterCode) {
+		List<Object> paramList = new ArrayList<Object>();
+		paramList.add(studentCode);
+		paramList.add(semesterCode);
+		return getDTOList(qryFeeStudentSpecificListByStudentCodeSemesterCode, paramList);
 	}
 	
 	@Override

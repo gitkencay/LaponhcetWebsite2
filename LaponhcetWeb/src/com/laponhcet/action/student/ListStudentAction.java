@@ -1,12 +1,10 @@
 package com.laponhcet.action.student;
 
 import java.util.List;
-
 import com.laponhcet.dao.AcademicProgramDAO;
 import com.laponhcet.dao.SchoolDAO;
 import com.laponhcet.dao.StudentDAO;
 import com.laponhcet.dto.AcademicProgramDTO;
-import com.laponhcet.dto.AcademicProgramGroupDTO;
 import com.laponhcet.dto.SchoolDTO;
 import com.laponhcet.dto.StudentDTO;
 import com.laponhcet.util.StudentUtil;
@@ -21,7 +19,6 @@ import com.mytechnopal.dto.ReligionDTO;
 public class ListStudentAction extends ActionBase {
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unchecked")
 	protected void setSessionVars() {
 		sessionInfo.setTransitionLink(new String[] {"US0095", "US0057", "US0062"}, new String[] {"US0058", "US0063", "US0065"}, new String[] {"US0059", "US0064", "US0066"}, "US0060", "US0061");
 		Pagination pagination = null;
@@ -38,16 +35,16 @@ public class ListStudentAction extends ActionBase {
 			//pagination.setAjaxResultDetailsList(new String[] {"profile_pict", "program", "code", "last_name", "first_name", "middle_name", Pagination.PAGINATION_TABLE_ROW_LINK_BUTTON});
 			pagination.setAjaxResultDetailsList(new String[] {"info", Pagination.PAGINATION_TABLE_ROW_LINK_BUTTON});
 
+			setSessionAttribute(AcademicProgramDTO.SESSION_ACADEMIC_PROGRAM_LIST, new AcademicProgramDAO().getAcademicProgramList());
 			setSessionAttribute(CityDTO.SESSION_CITY_LIST, new CityDAO().getCityList());
 			setSessionAttribute(ReligionDTO.SESSION_RELIGION_LIST, new ReligionDAO().getReligionList());
-			setSessionAttribute(AcademicProgramDTO.SESSION_ACADEMIC_PROGRAM_LIST, new AcademicProgramDAO().getAcademicProgramList());
 			setSessionAttribute(SchoolDTO.SESSION_SCHOOL_LIST, new SchoolDAO().getSchoolList());
 			setSessionAttribute(StudentDTO.SESSION_STUDENT, new StudentDTO());
 		}
 		else{
 			pagination = (Pagination)getSessionAttribute(StudentDTO.SESSION_STUDENT_PAGINATION);
 		}
-		StudentUtil.setPaginationRecord(sessionInfo, pagination, (List<DTOBase>) getSessionAttribute(AcademicProgramGroupDTO.SESSION_ACADEMIC_PROGRAM_GROUP_LIST));
+		StudentUtil.setPaginationRecord(sessionInfo, pagination, (List<DTOBase>) getSessionAttribute(AcademicProgramDTO.SESSION_ACADEMIC_PROGRAM_LIST), false);
 		setSessionAttribute(StudentDTO.SESSION_STUDENT_PAGINATION, pagination);
 	}
 }

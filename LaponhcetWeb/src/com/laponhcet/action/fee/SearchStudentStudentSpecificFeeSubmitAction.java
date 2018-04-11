@@ -7,16 +7,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.laponhcet.dto.AcademicProgramDTO;
 import com.laponhcet.dto.StudentDTO;
-import com.laponhcet.util.FeeStudentSpecificUtil;
 import com.laponhcet.util.StudentUtil;
 import com.mytechnopal.Pagination;
 import com.mytechnopal.base.AjaxActionBase;
 import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.dao.UserDAO;
-import com.mytechnopal.dto.UserDTO;
 import com.mytechnopal.dto.UserGroupDTO;
-import com.mytechnopal.util.DTOUtil;
 import com.mytechnopal.util.StringUtil;
 
 public class SearchStudentStudentSpecificFeeSubmitAction extends AjaxActionBase {
@@ -24,22 +22,20 @@ public class SearchStudentStudentSpecificFeeSubmitAction extends AjaxActionBase 
 
 	protected void searchRecord() {
 		Pagination pagination = (Pagination) getSessionAttribute(StudentDTO.SESSION_STUDENT_PAGINATION);
- 		String searchValue = getRequestString("txtSearchValue");
-		if(StringUtil.isEmpty(searchValue)) {
+ 		pagination.setSearchValue(getRequestString("txtSearchValue"));
+		if(StringUtil.isEmpty(pagination.getSearchValue())) {
 			pagination.setRecordList(pagination.getRecordListUnfiltered());
 		}
 		else {
-			if(searchValue.equalsIgnoreCase(StudentDTO.PAGINATION_SEARCH_CRITERIA_LIST[0])) {
-				List<DTOBase> userList = new UserDAO().getUserListByUserGroupCodeSearchByNameCode(UserGroupDTO.USER_GROUP_STUDENT_CODE, getRequestString("txtSearchValue"));
-				pagination.setRecordList(StudentUtil.getStudentList(userList));
+			if(pagination.getSearchCriteria().equalsIgnoreCase(StudentDTO.PAGINATION_SEARCH_CRITERIA_LIST[0])) {
+				List<DTOBase> userListByCodeName = new UserDAO().getUserListByUserGroupCodeSearchByNameCode(UserGroupDTO.USER_GROUP_STUDENT_CODE, pagination.getSearchValue());
+				pagination.setRecordList(StudentUtil.getStudentListByUserList(pagination, userListByCodeName, (List<DTOBase>) getSessionAttribute(AcademicProgramDTO.SESSION_ACADEMIC_PROGRAM_LIST)));
 			}
-			
 		}
 	}
 	
 	protected void setPaginationList() {
 		Pagination pagination = (Pagination) getSessionAttribute(StudentDTO.SESSION_STUDENT_PAGINATION);
-		List<DTOBase> userList = (List<DTOBase>) getSessionAttribute(UserDTO.SESSION_USER_LIST);
 		int currentPageTotalRecord = pagination.getCurrentPageRecordList().size();
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObj = new JSONObject();
@@ -55,21 +51,21 @@ public class SearchStudentStudentSpecificFeeSubmitAction extends AjaxActionBase 
 		}
 		for(int i=0; i<currentPageTotalRecord; i++) {
 			StudentDTO student = (StudentDTO) pagination.getCurrentPageRecordList().get(i);
-			UserDTO user = (UserDTO) DTOUtil.getObjByCode(userList, student.getCode());
 			try {
 				JSONObject jsonObjDetails = new JSONObject();
-				jsonObjDetails.put("code", student.getCode());
-				jsonObjDetails.put("lastName", user.getLastName());
-				jsonObjDetails.put("firstName", user.getFirstName());
-				jsonObjDetails.put("middleName", user.getMiddleName());
-				jsonObjDetails.put("button", FeeStudentSpecificUtil.getRecordButtonStrForUser(sessionInfo, student));
+				jsonObjDetails.put(Pagination.PAGINATION_TABLE_ROW_ID, student.getId());
+				jsonObjDetails.put("id", student.getCode());
+				jsonObjDetails.put("last_name", student.getLastName());
+				jsonObjDetails.put("first_name", student.getFirstName());
+				jsonObjDetails.put("middle_initial", StringUtil.isEmpty(student.getMiddleName())?"":StringUtil.getLeft(student.getMiddleName(), 1));
+				jsonObjDetails.put("academic_program", student.getAcademicProgram().getDisplayText());
+				jsonObjDetails.put(Pagination.PAGINATION_TABLE_ROW_LINK_BUTTON, "<a href='#' onClick=\"recordAction(" + student.getId() + ", 'US0151')\">Select</a>");
 				jsonArray.put(jsonObjDetails);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 		try {
 			jsonObj.put("details", jsonArray);
 		} catch (JSONException e1) {

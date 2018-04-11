@@ -14,6 +14,9 @@ public class UserRFIDDAO extends DAOBase {
 	private static final long serialVersionUID = 1L;
 	
 	private String qryUserRFIDAdd = "USER_RFID_ADD";
+	private String qryUserRFIDUpdate = "USER_RFID_UPDATE";
+	private String qryUserRFIDDelete = "USER_RFID_DELETE";
+	
 	private String qryUserRFIDByRFId = "USER_RFID_BY_RFID";
 	private String qryUserRFIDList = "USER_RFID_LIST";
 	
@@ -38,6 +41,43 @@ public class UserRFIDDAO extends DAOBase {
 			prepStmnt.setTimestamp(14, userRFID.getAddedTimestamp());
 			prepStmnt.setString(15, userRFID.getUpdatedBy());
 			prepStmnt.setTimestamp(16, userRFID.getUpdatedTimestamp());	
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		prepStmntList.add(prepStmnt);
+	}
+	
+	protected void update(Connection conn, List<PreparedStatement> prepStmntList, Object obj) {
+		UserRFIDDTO userRFID = (UserRFIDDTO) obj;
+		PreparedStatement prepStmnt = null;
+		try {
+			prepStmnt = conn.prepareStatement(getQueryStatement(qryUserRFIDUpdate));
+			prepStmnt.setString(1, userRFID.getProfilePict());
+			prepStmnt.setString(2, userRFID.getRfid());
+			prepStmnt.setString(3, userRFID.getLastName());
+			prepStmnt.setString(4, userRFID.getFirstName());
+			prepStmnt.setString(5, userRFID.getMiddleName());
+			prepStmnt.setString(6, userRFID.getPrefixName());
+			prepStmnt.setString(7, userRFID.getSuffixName());
+			prepStmnt.setString(8, userRFID.getOtherTitle());
+			prepStmnt.setString(9, userRFID.getGender());
+			prepStmnt.setString(10, userRFID.getCpNumber());
+			prepStmnt.setString(11, userRFID.getContactCPNumber());
+			prepStmnt.setString(12, userRFID.getUpdatedBy());
+			prepStmnt.setTimestamp(13, userRFID.getUpdatedTimestamp());	
+			prepStmnt.setString(14, userRFID.getCode());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		prepStmntList.add(prepStmnt);
+	}
+	
+	protected void delete(Connection conn, List<PreparedStatement> prepStmntList, Object obj) {
+		UserRFIDDTO userRFID = (UserRFIDDTO) obj;
+		PreparedStatement prepStmnt = null;
+		try {
+			prepStmnt = conn.prepareStatement(getQueryStatement(qryUserRFIDDelete));
+			prepStmnt.setString(1, userRFID.getCode());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

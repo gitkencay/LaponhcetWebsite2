@@ -1,5 +1,7 @@
 package com.laponhcet.action.guest;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import com.laponhcet.dao.AcademicYearDAO;
@@ -13,11 +15,11 @@ import com.mytechnopal.base.ActionBase;
 import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.base.SettingsBase;
 import com.mytechnopal.dao.UserDAO;
+import com.mytechnopal.dao.UserLogDAO;
 import com.mytechnopal.dto.LinkDTO;
 import com.mytechnopal.dto.UserDTO;
 import com.mytechnopal.util.DateTimeUtil;
 import com.mytechnopal.util.StringUtil;
-import com.mytechnopal.util.WebUtil;
 
 public class LoginConfirmAction extends ActionBase {
 	private static final long serialVersionUID = 1L;
@@ -36,9 +38,8 @@ public class LoginConfirmAction extends ActionBase {
 		if(SettingsUtil.OWNER_CODE.equalsIgnoreCase(SettingsUtil.OWNER_CODE_BCC) || SettingsUtil.OWNER_CODE.equalsIgnoreCase(SettingsUtil.OWNER_CODE_FBC)) {
 			List<DTOBase> academicYearList = new AcademicYearDAO().getAcademicYearList();
 			List<DTOBase> semesterList = new SemesterDAO().getSemesterList();
-			semesterList = SemesterUtil.getSemesterListByAcademicYear(semesterList, academicYearList);
 			setSessionAttribute(AcademicYearDTO.SESSION_ACADEMIC_YEAR_LIST, academicYearList);
-			setSessionAttribute(SemesterDTO.SESSION_SEMESTER_LIST, semesterList);
+			setSessionAttribute(SemesterDTO.SESSION_SEMESTER_LIST, SemesterUtil.getSemesterListByAcademicYear(semesterList, academicYearList));
 		}
 	}
 
@@ -69,9 +70,14 @@ public class LoginConfirmAction extends ActionBase {
 			}
 			else {
 				if(user.isActive()) {
-					user.setLastLoginTimestamp(DateTimeUtil.getCurrentTimestamp());
-					user.setLastLoginIPAddress(WebUtil.getClientIPAddress());
-					userDAO.executeUpdateUserLastLogin(user);
+					user.setAddedTimestamp(DateTimeUtil.getCurrentTimestamp());
+					try {
+						user.setSourceDeviceInfo(InetAddress.getLocalHost().toString());
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					new UserLogDAO().executeAdd(user);
 				}
 				else {
 					actionResponse.constructMessage(ActionResponse.TYPE_FAIL, new String[]{"Your profile is already inactive.  Please contact the administrator"});

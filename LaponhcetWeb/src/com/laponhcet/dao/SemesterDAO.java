@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.laponhcet.dto.AcademicYearDTO;
 import com.laponhcet.dto.SemesterDTO;
 import com.mytechnopal.ActionResponse;
 import com.mytechnopal.base.DAOBase;
@@ -25,9 +24,10 @@ public class SemesterDAO extends DAOBase {
 	private String qrySemesterLast = "SEMESTER_LAST";
 	private String qrySemesterByName = "SEMESTER_BY_NAME";
 	private String qrySemesterByCode = "SEMESTER_BY_CODE";
-	private String qrySemesterByAcademicYearName = "SEMESTER_BY_ACADEMICYEARNAME";
+	private String qrySemesterByAcademicYearCodeName = "SEMESTER_BY_ACADEMICYEARCODENAME";
 	private String qrySemesterByDateStartDateEnd = "SEMESTER_BY_DATEENDDATESTART";
 	private String qrySemesterList = "SEMESTER_LIST";
+	private String qrySemesterListByAcademicYearCode = "SEMESTER_LIST_BY_ACADEMICYEARCODE";
 	private String qrySemesterSearchByName = "SEMESTER_LIST_SEARCHBY_NAME";
 
 	@Override
@@ -66,7 +66,7 @@ public class SemesterDAO extends DAOBase {
 		String code = "001"; //default semester code
 		if(semester != null) {
 			int nextNum = Integer.parseInt(semester.getCode()) + 1; 
-			code =  StringUtil.getPadded(String.valueOf(nextNum), 2, "0", true);
+			code =  StringUtil.getPadded(String.valueOf(nextNum), 3, "0", true);
 		}
 		return code;
 	}
@@ -79,15 +79,19 @@ public class SemesterDAO extends DAOBase {
 		return getDTOList(qrySemesterList);
 	}
 	
+	public List<DTOBase> getSemesterListByAcademicYearCode(String academicYearCode) {	
+		return getDTOList(qrySemesterListByAcademicYearCode, academicYearCode);
+	}
+	
 	public List<DTOBase> getSemesterListSearchByName(Integer searchValue) {
 		return getDTOList(qrySemesterSearchByName, searchValue);
 	}
 	
-	public SemesterDTO getSemesterByAcademicYearName(String academicYear, Integer Name) {
+	public SemesterDTO getSemesterByAcademicYearCodeName(String academicYearCode, Integer Name) {
 		ArrayList<Object> paramList = new ArrayList<Object>();
-		paramList.add(academicYear);
+		paramList.add(academicYearCode);
 		paramList.add(Name );	
-		return (SemesterDTO) getDTO(qrySemesterByAcademicYearName, paramList);	
+		return (SemesterDTO) getDTO(qrySemesterByAcademicYearCodeName, paramList);	
 	}
 	
 	public SemesterDTO getSemesterByDateEndDateStart(String dateStart, String dateEnd) {

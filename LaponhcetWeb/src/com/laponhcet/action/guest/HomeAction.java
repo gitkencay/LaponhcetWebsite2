@@ -7,6 +7,6 @@ public class HomeAction extends ActionBase {
 	private static final long serialVersionUID = 1L;
 
 	protected void setSessionVars() {
-		setSessionBeforeTrans(RegisterDTO.SESSION_REGISTER, new RegisterDTO());
+		//setSessionBeforeTrans(RegisterDTO.SESSION_REGISTER, new RegisterDTO());
 	}
 }

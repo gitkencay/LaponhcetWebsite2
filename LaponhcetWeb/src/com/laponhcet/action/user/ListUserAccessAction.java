@@ -37,7 +37,7 @@ public class ListUserAccessAction extends ActionBase {
 	private void setPaginationRecord(Pagination pagination, SessionInfo sessionInfo) {
 		for(DTOBase dto: pagination.getCurrentPageRecordList()) {
 			UserDTO user = (UserDTO) dto;
-			UserGroupDTO userGroupDTO = new UserGroupDAO().getUserGroupByCode(user.getUserGroup().getCode());
+			UserGroupDTO userGroupDTO = new UserGroupDAO().getUserGroupByCode(user.getUserGroupCodes());
 			user.setPaginationRecord(new String[]{user.getCode(), user.getLastName(), user.getFirstName(), user.getMiddleName(),  userGroupDTO.getName() , UserAccessUtil.getRecordButtonStr(sessionInfo, user)});
 		}
 	}		

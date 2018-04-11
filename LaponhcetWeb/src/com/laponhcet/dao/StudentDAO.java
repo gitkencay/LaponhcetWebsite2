@@ -15,10 +15,10 @@ import com.laponhcet.util.UserRFIDUtil;
 import com.mytechnopal.ActionResponse;
 import com.mytechnopal.base.DAOBase;
 import com.mytechnopal.base.DTOBase;
+import com.mytechnopal.dao.MediaDAO;
 import com.mytechnopal.dao.UpdateKeyDAO;
 import com.mytechnopal.dao.UserDAO;
-import com.mytechnopal.dto.UpdateKeyDTO;
-import com.mytechnopal.dto.UserDTO;
+import com.mytechnopal.dao.UserLinkDAO;
 import com.mytechnopal.dto.UserGroupDTO;
 import com.mytechnopal.util.DateTimeUtil;
 import com.mytechnopal.util.StringUtil;
@@ -30,15 +30,11 @@ public class StudentDAO extends DAOBase {
 	private String qryStudentAdd = "STUDENT_ADD";
 	private String qryStudentList = "STUDENT_LIST";
 	private String qryStudentByCode = "STUDENT_BY_CODE";
-	
-	
 	private String qryStudentUpdate = "STUDENT_UPDATE";
+	
 	private String qryStudentDelete = "STUDENT_DELETE";
-	
 	private String qryStudentByName = "STUDENT_BY_NAME";
-	
 	private String qryStudentListSearchByAcademicProgramCode = "STUDENT_LIST_SEARCHBY_ACADEMICPROGRAMCODE";
-	
 	private String qryStudentLast = "STUDENT_LAST";
 	private String qryStudentLastBCC = "STUDENT_LAST_BCC";
 	private String qryStudentLastFAST = "STUDENT_LAST_FAST";
@@ -47,7 +43,7 @@ public class StudentDAO extends DAOBase {
 	@Override
 	public void executeAdd(DTOBase obj) {
 		StudentDTO student = (StudentDTO) obj;	
-		student.getUserGroup().setCode(UserGroupDTO.USER_GROUP_STUDENT_CODE);
+		student.setUserGroupCodes(UserGroupDTO.USER_GROUP_STUDENT_CODE);
 
 		Connection conn = daoConnectorUtil.getConnection();
 		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
@@ -60,20 +56,23 @@ public class StudentDAO extends DAOBase {
 		student.setActive(true);
 		student.setBaseDataOnInsert();
 		
-		//User
-		new UserDAO().add(conn, prepStmntList, student);
-		
 		//Student
 		add(conn, prepStmntList, student);
 
-		//Update key
-		UpdateKeyDTO updateKey = new UpdateKeyDTO();
-		updateKey.setUserCode(student.getCode());
-		updateKey.setCpNumber(StringUtil.getUniqueId(3, 3));
-		new UpdateKeyDAO().add(conn, prepStmntList, updateKey);
+		//User
+		new UserDAO().add(conn, prepStmntList, student);
 		
 		//User RFID
 		new UserRFIDDAO().add(conn, prepStmntList, UserRFIDUtil.getUserRFIDByUser(student));
+				
+		//Media
+		student.setProfilePictInfo("STUDENT", "PROFILE_PICT");
+		new MediaDAO().add(conn, prepStmntList, student.getProfilePict());
+		
+		//Update key
+		student.setUpdateKeyInfo();
+		new UpdateKeyDAO().add(conn, prepStmntList, student.getUpdateKey());
+		
 		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 		
 		//To be used if facekeeper and the server are in separate machines
@@ -191,23 +190,35 @@ public class StudentDAO extends DAOBase {
 		prepStmntList.add(prepStmnt);
 	}
 	
-	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void executeDelete(DTOBase obj) {
 		StudentDTO student = (StudentDTO) obj;
-		//User
-		UserDTO user = new UserDAO().getUserByCode(student.getCode());
+		
+		List<DTOBase> userLinkList = new UserLinkDAO().getUserLinkListByUserCode(student.getCode());
+		
 		Connection conn = daoConnectorUtil.getConnection();
 		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
 		
-		//delete student
+		//Student
 		delete(conn, prepStmntList, student);
-		//deleteStudentProfilePict(conn, prepStmntList, student);
-		//delete user
-		new UserDAO().delete(conn, prepStmntList, user);
-		//delete user link list
-		//new UserLinkDAO().delete(conn, prepStmntList, user);
+
+		//User
+		new UserDAO().delete(conn, prepStmntList, student);
+		
+		//UserRFID
+		new UserRFIDDAO().delete(conn, prepStmntList, UserRFIDUtil.getUserRFIDByUser(student));
+		
+		//Media
+		new MediaDAO().delete(conn, prepStmntList, student.getProfilePict());
+		
+		//Update Key
+		new UpdateKeyDAO().delete(conn, prepStmntList, student.getUpdateKey());
+		
+		//User Link
+		if(userLinkList.size() >= 1) {
+			new UserLinkDAO().delete(conn, prepStmntList, student);
+		}
+
 		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 	}
 	
@@ -223,7 +234,6 @@ public class StudentDAO extends DAOBase {
 		prepStmntList.add(prepStmnt);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void executeUpdate(DTOBase obj) {
 		Connection conn = daoConnectorUtil.getConnection();
@@ -231,12 +241,18 @@ public class StudentDAO extends DAOBase {
 		StudentDTO student = (StudentDTO) obj;
 		student.setBaseDataOnUpdate();
 		
-		//User
-		new UserDAO().update (conn, prepStmntList, student);
-		
 		//Student
 		update(conn, prepStmntList, student);
-		//updateStudentProfilePict(conn, prepStmntList, student);
+		
+		//User
+		new UserDAO().update(conn, prepStmntList, student);
+		
+		//UserRFID
+		new UserRFIDDAO().update(conn, prepStmntList, UserRFIDUtil.getUserRFIDByUser(student));
+				
+		//Media
+		new MediaDAO().update(conn, prepStmntList, student.getProfilePict());
+		
 		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 	}
 

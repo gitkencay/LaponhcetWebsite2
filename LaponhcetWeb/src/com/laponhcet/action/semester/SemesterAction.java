@@ -35,7 +35,7 @@ public class SemesterAction extends ActionBase {
 				actionResponse.constructMessage(ActionResponse.TYPE_INVALID, "Ending Date should be between " + DateTimeUtil.getDateTimeToStr(semester.getDateStart(), "yyyy-MM-dd") + " And " + academicYear.getDateEnd());
 			}
 			else {
-				SemesterDTO semesterExist = new SemesterDAO().getSemesterByAcademicYearName(semester.getAcademicYear().getCode(), semester.getName());
+				SemesterDTO semesterExist = new SemesterDAO().getSemesterByAcademicYearCodeName(semester.getAcademicYear().getCode(), semester.getName());
 				SemesterDTO semesterExistDates = new SemesterDAO().getSemesterByDateEndDateStart(DateTimeUtil.getDateTimeToStr(semester.getDateStart(), "yyyy-MM-dd"), DateTimeUtil.getDateTimeToStr(semester.getDateEnd(), "yyyy-MM-dd"));
 				if(sessionInfo.isPreviousLinkAdd()) {
 					if(semesterExist != null) {

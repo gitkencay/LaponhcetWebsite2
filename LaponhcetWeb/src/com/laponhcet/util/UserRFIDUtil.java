@@ -11,7 +11,7 @@ public class UserRFIDUtil implements Serializable {
 	public static UserRFIDDTO getUserRFIDByUser(UserDTO user) {
 		UserRFIDDTO userRFID = new UserRFIDDTO();
 		userRFID.setCode(user.getCode());
-		userRFID.setProfilePict(user.getProfilePict());
+		userRFID.setProfilePict(user.getProfilePict().getPict());
 		userRFID.setRfid(user.getRfid());
 		userRFID.setLastName(user.getLastName());
 		userRFID.setFirstName(user.getFirstName());

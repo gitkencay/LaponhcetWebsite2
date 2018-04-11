@@ -17,7 +17,7 @@
 %>
 <div class="col-lg-12 m-t-lg">
 	<%=new CheckBoxWebControl().getCheckBoxWebControl(sessionInfo, "col-sm-2", false, "Mandatory", fee.isMandatory(), "Mandatory", "") %>
-    <%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-4", false, "Parent", "Parent", feeParentList, feeParent, "--- SELECT PARENT---", "", "onchange=\"openLink('U00053')\"") %>
+    <%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-4", false, "Parent", "Parent", feeParentList, feeParent, "--NONE--", "", "onchange=\"openLink('U00053')\"") %>
     <%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-6", true, "Name", "Name", "Name", fee.getName(), 20, WebControlBase.DATA_TYPE_STRING, "")%>
     <div class="row">
 		<%

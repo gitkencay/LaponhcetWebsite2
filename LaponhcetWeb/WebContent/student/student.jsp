@@ -27,11 +27,12 @@
 		    <div class="col-sm-12 tab-pane active" id="tabPersonalInfo">  
 		    	<div class="row"> 
 		    		<div class="col-sm-3 text-center">
-						<%=new FileInputWebControl().getFileInputWebControl(sessionInfo, "col-sm-4", false, "Photo", "ProfilePict", true, student.getProfilePict(), 1024000, FileUtil.IMG_FILENAME_EXT_LIST, 240, 240, null, "") %>	    		
+						<%=new FileInputWebControl().getFileInputWebControl(sessionInfo, "col-sm-4", false, "Photo", "ProfilePict", true, student.getProfilePict().getPict(), 1024000, FileUtil.IMG_FILENAME_EXT_LIST, 240, 240, null, "") %>	    		
 		    		</div>
 		    		<div class="col-sm-9">
 			    		<div class="col-sm-4">
-			    			<h5 class="m-t-lg"><strong>
+			    			<h5 class="m-t-lg">
+			    				<strong>
 			    		<%
 			    		
 			    			if(StringUtil.isEmpty(student.getCode())) {
@@ -45,7 +46,8 @@
 			    		<%
 			    			}
 			    		%>
-				    		</strong></h5>
+				    			</strong>
+				    		</h5>
 					    </div> 
 				    	<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4", false, "RFID", "Scan RFID here", "Rfid", student.getRfid(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
 				    	<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4", false, "Facebook ID", "Facebook ID", "FacebookId", student.getFacebookId(), 16, WebControlBase.DATA_TYPE_STRING, "") %>

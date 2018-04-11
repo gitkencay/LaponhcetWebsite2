@@ -29,7 +29,7 @@ public class StudentAction extends ActionBase {
 		List<DTOBase> schoolList = (List<DTOBase>) getSessionAttribute(SchoolDTO.SESSION_SCHOOL_LIST);
 		
 		//Personal Information
-		student.setProfilePict(getRequestString("txtProfilePict", true));
+		student.getProfilePict().setPict(getRequestString("txtProfilePict", true));
 		student.setRfid(getRequestString("txtRfid"));
 		student.setFacebookId(getRequestString("txtFacebookId"));
 		student.setLearnerReferenceNumber(getRequestString("txtLearnerReferenceNumber"));
@@ -227,7 +227,7 @@ public class StudentAction extends ActionBase {
 				if(sessionInfo.isPreviousLinkAdd()) {
 					String msg = "";
 					if(StringUtil.isEmpty(student.getCode())) {
-						List<DTOBase> existingUserListByNameAndGroup = new UserDAO().getUserListByLastNameFirstNameMiddleNameUserGroupCode(student.getLastName(), student.getFirstName(), student.getMiddleName(), UserGroupDTO.USER_GROUP_STUDENT_CODE);
+						List<DTOBase> existingUserListByNameAndGroup = new UserDAO().getUserListByNameUserGroupCode(student.getLastName(), student.getFirstName(), student.getMiddleName(), UserGroupDTO.USER_GROUP_STUDENT_CODE);
 						
 						if(existingUserListByNameAndGroup.size() >= 1) {
 							if(existingUserListByNameAndGroup.size() == 1) {

@@ -20,6 +20,7 @@ public class AcademicYearDAO extends DAOBase{
 	private String qryAcademicYearAdd = "ACADEMIC_YEAR_ADD";
 	private String qryAcademicYearUpdate = "ACADEMIC_YEAR_UPDATE";
 	private String qryAcademicYearDelete = "ACADEMIC_YEAR_DELETE";
+	private String qryAcademicYearByCode = "ACADEMIC_YEAR_BY_CODE";
 	private String qryAcademicYearList = "ACADEMIC_YEAR_LIST";
 	private String qryAcademicYearLastCode = "ACADEMIC_YEAR_LAST_CODE";
 	private String qryAcademicYearListSearchByName = "ACADEMIC_YEAR_LIST_SEARCHBY_NAME";
@@ -137,6 +138,10 @@ public class AcademicYearDAO extends DAOBase{
 		
 	}
 
+	public AcademicYearDTO getAcademicYearByCode(String code) {
+		return (AcademicYearDTO) getDTO(qryAcademicYearByCode, code);
+	}
+	
 	public List<DTOBase> getAcademicYearListSearchByName(String searchValue) {
 		return getDTOList(qryAcademicYearListSearchByName, "%" + searchValue + "%");
 	}

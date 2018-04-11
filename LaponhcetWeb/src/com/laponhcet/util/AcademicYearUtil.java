@@ -4,16 +4,13 @@ package com.laponhcet.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.laponhcet.dao.AcademicProgramDAO;
-import com.laponhcet.dao.AcademicYearDAO;
-import com.laponhcet.dto.AcademicProgramDTO;
 import com.laponhcet.dto.AcademicYearDTO;
 import com.mytechnopal.Pagination;
 import com.mytechnopal.SessionInfo;
 import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.base.DataAndSessionBase;
-import com.mytechnopal.util.DTOUtil;
 import com.mytechnopal.util.DateTimeUtil;
+import com.mytechnopal.util.StringUtil;
 
 public class AcademicYearUtil extends DataAndSessionBase {
 	private static final long serialVersionUID = 1L;
@@ -35,5 +32,25 @@ public class AcademicYearUtil extends DataAndSessionBase {
 			AcademicYearDTO academicYear = (AcademicYearDTO) dto;
 			academicYear.setPaginationRecord(new String[] {academicYear.getName(), DateTimeUtil.getDateTimeToStr(academicYear.getDateStart(), "MM-dd-yyyy"), DateTimeUtil.getDateTimeToStr(academicYear.getDateEnd(), "MM-dd-yyyy"), AcademicProgramUtil.getAcademicProgramCodes(academicProgramList, academicYear.getAcademicProgramCodes()), pagination.getLinkButtonStr(sessionInfo, academicYear.getId()).replace("~", ",") });
 		}
+	}
+	
+	public static AcademicYearDTO getAcademicYearCurrentByAcademicProgramCode(List<DTOBase> academicYearList, String programCode) {
+		for(DTOBase academicYearObj: academicYearList) {
+			AcademicYearDTO academicYear = (AcademicYearDTO) academicYearObj;
+			if(DateTimeUtil.isDateTimeWithin(DateTimeUtil.getCurrentTimestamp(), academicYear.getDateStart(), academicYear.getDateEnd()) && StringUtil.isStrExistInStrArr(academicYear.getAcademicProgramCodes().split("~"), programCode)) {
+				return academicYear;
+			}
+		}
+		return null;
+	}
+	
+	public static AcademicYearDTO getAcademicYearCurrent(List<DTOBase> academicYearList) {
+		for(DTOBase academicYearObj: academicYearList) {
+			AcademicYearDTO academicYear = (AcademicYearDTO) academicYearObj;
+			if(DateTimeUtil.isDateTimeWithin(DateTimeUtil.getCurrentTimestamp(), academicYear.getDateStart(), academicYear.getDateEnd())) {
+				return academicYear;
+			}
+		}
+		return null;
 	}
 }

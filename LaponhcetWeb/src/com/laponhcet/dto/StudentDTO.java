@@ -67,11 +67,12 @@ public class StudentDTO extends UserDTO {
 		StudentDTO student = new StudentDTO();
 		
 		//User specific arrange based from user table sequence
+		student.setProfilePict(super.getProfilePict());
 		student.setRfid(super.getRfid());
 		student.setFacebookId(super.getFacebookId());
 		student.setUserName(super.getUserName());
 		student.setPassword(super.getPassword());
-		student.setUserGroup(super.getUserGroup());
+		student.setUserGroupCodes(super.getUserGroupCodes());
 		student.setLastName(super.getLastName());
 		student.setFirstName(super.getFirstName());
 		student.setMiddleName(super.getMiddleName());
@@ -112,16 +113,12 @@ public class StudentDTO extends UserDTO {
 		student.setContactEmailAddress(super.getContactEmailAddress());
 		student.setContactFacebookId(super.getContactFacebookId());
 		student.setActive(super.isActive());
-		student.setHtmlSkin(super.getHtmlSkin());
-		student.setLastLoginTimestamp(super.getLastLoginTimestamp());
-		student.setLastLoginIPAddress(super.getLastLoginIPAddress());
-		student.setSourceDeviceInfo(super.getSourceDeviceInfo());
-		student.setProfilePict(super.getProfilePict());
 		
 		//Student Specific arrange based from student table sequence
 		student.setId(this.getId());
+		student.setCode(super.getCode());
 		student.setLearnerReferenceNumber(this.learnerReferenceNumber);
-		//student.setProgram(); -to be set later
+		student.setAcademicProgram(this.academicProgram);
 		student.setSkills(this.skills);
 		student.setElementarySchoolCompletedAt(this.elementarySchoolCompletedAt);
 		student.setElementarySchoolGraduatedYear(this.getElementarySchoolGraduatedYear());
