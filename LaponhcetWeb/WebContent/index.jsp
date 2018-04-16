@@ -22,7 +22,7 @@
 <!-- TechnoPal -->
 <script src="common/common.js"></script>
 
-<!-- Mainly scripts -->
+<!-- Main scripts -->
 <link href="/static/inspinia/css/custom.css" rel="stylesheet">
 <link href="/static/inspinia/css/bootstrap.min.css" rel="stylesheet">
 <script src="/static/inspinia/js/jquery-3.1.1.min.js"></script>
@@ -208,15 +208,13 @@ else {
 %>
 	<form id="frmMain" name="frmMain" method="post" action="MainController"
 		onSubmit="return false" style="margin: 0; padding: 0; outline: 0">
-		<input id="txtSelectedLink" name="txtSelectedLink" type="hidden"
-			value="" />
+		<input id="txtSelectedLink" name="txtSelectedLink" type="hidden" value="" />
 		<%
 if(user.getUserGroupCodes().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)) {
 	if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG)) { //FaceKeeper
 %>
 		<div class="row">
-			<jsp:include flush="true"
-				page="<%=sessionInfo.getCurrentLink().getPage()%>"></jsp:include>
+			<jsp:include flush="true" page="<%=sessionInfo.getCurrentLink().getPage()%>"></jsp:include>
 		</div>
 		<%		
 	}
@@ -224,7 +222,7 @@ if(user.getUserGroupCodes().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)
 		String guestHomePage = "guest/" + SettingsUtil.OWNER_CODE + "/home.jsp";
 %>
 		<jsp:include flush="true" page="<%=guestHomePage%>"></jsp:include>
-		<%
+<%
 	}
 }
 else {

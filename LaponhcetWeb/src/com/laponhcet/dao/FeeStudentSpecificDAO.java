@@ -3,14 +3,15 @@ package com.laponhcet.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.laponhcet.dto.AcademicYearDTO;
 import com.laponhcet.dto.FeeStudentSpecificDTO;
 import com.mytechnopal.ActionResponse;
 import com.mytechnopal.base.DAOBase;
 import com.mytechnopal.base.DTOBase;
+import com.mytechnopal.util.DateTimeUtil;
 
 public class FeeStudentSpecificDAO extends DAOBase {
 	private static final long serialVersionUID = 1L;
@@ -25,12 +26,6 @@ public class FeeStudentSpecificDAO extends DAOBase {
 	
 	@Override
 	public void executeAdd(DTOBase obj) {
-		FeeStudentSpecificDTO feeStudentSpecific = (FeeStudentSpecificDTO) obj;
-		Connection conn = daoConnectorUtil.getConnection();
-		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
-		feeStudentSpecific.setBaseDataOnInsert();
-		add(conn, prepStmntList, feeStudentSpecific);		
-		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 	}
 	
 	protected void add(Connection conn, List<PreparedStatement> prepStmntList, DTOBase obj) {
@@ -76,9 +71,7 @@ public class FeeStudentSpecificDAO extends DAOBase {
 	}
 	
 	@Override
-	public void executeAddList(List<DTOBase> arg0) {
-		// TODO Auto-generated method stub
-
+	public void executeAddList(List<DTOBase> objList) {
 	}
 
 	@Override
@@ -88,9 +81,8 @@ public class FeeStudentSpecificDAO extends DAOBase {
 	}
 
 	@Override
-	public void executeDeleteList(List<DTOBase> arg0) {
-		// TODO Auto-generated method stub
-
+	public void executeDeleteList(List<DTOBase> objList) {
+		
 	}
 
 	@Override
@@ -100,9 +92,17 @@ public class FeeStudentSpecificDAO extends DAOBase {
 	}
 
 	@Override
-	public void executeUpdateList(List<DTOBase> arg0) {
-		// TODO Auto-generated method stub
-
+	public void executeUpdateList(List<DTOBase> objList) {
+		Connection conn = daoConnectorUtil.getConnection();
+		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
+		Timestamp addedTimestamp = DateTimeUtil.getCurrentTimestamp();
+		for(DTOBase feeStudentSpecificDTO: objList) {
+			FeeStudentSpecificDTO feeStudentSpecific = (FeeStudentSpecificDTO) feeStudentSpecificDTO;
+			feeStudentSpecific.setAddedTimestamp(addedTimestamp);
+			feeStudentSpecific.setBaseDataOnInsert();
+			add(conn, prepStmntList, feeStudentSpecific);
+		}
+		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 	}
 
 	@Override

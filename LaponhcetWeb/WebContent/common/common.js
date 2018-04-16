@@ -432,7 +432,6 @@ function printContent(elementId, title){
 	newwin.document.close();
 }
 
-
 //Sprite Animation
 (function() {
     var lastTime = 0;

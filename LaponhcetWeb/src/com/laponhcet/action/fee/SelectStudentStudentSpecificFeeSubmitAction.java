@@ -6,10 +6,12 @@ import java.util.List;
 import com.laponhcet.dao.FeeStudentSpecificDAO;
 import com.laponhcet.dao.SemesterDAO;
 import com.laponhcet.dto.AcademicYearDTO;
+import com.laponhcet.dto.FeeDTO;
 import com.laponhcet.dto.FeeStudentSpecificDTO;
 import com.laponhcet.dto.SemesterDTO;
 import com.laponhcet.dto.StudentDTO;
 import com.laponhcet.util.AcademicYearUtil;
+import com.laponhcet.util.FeeStudentSpecificUtil;
 import com.laponhcet.util.SemesterUtil;
 import com.mytechnopal.Pagination;
 import com.mytechnopal.base.ActionBase;
@@ -24,7 +26,7 @@ public class SelectStudentStudentSpecificFeeSubmitAction extends ActionBase {
 	
 	protected void executeLogic() {
 		Pagination pagination = (Pagination) getSessionAttribute(StudentDTO.SESSION_STUDENT_PAGINATION);
-		List<DTOBase> feeStudentSpecificList = (List<DTOBase>) getSessionAttribute(FeeStudentSpecificDTO.SESSION_FEESTUDENTSPECIFIC_LIST);
+		List<DTOBase> feeStudentSpecificList;
 		List<DTOBase> academicYearList = (List<DTOBase>) getSessionAttribute(AcademicYearDTO.SESSION_ACADEMIC_YEAR_LIST);
 				
 		FeeStudentSpecificDTO feeStudentSpecific = (FeeStudentSpecificDTO) getSessionAttribute(FeeStudentSpecificDTO.SESSION_FEESTUDENTSPECIFIC);
@@ -44,7 +46,11 @@ public class SelectStudentStudentSpecificFeeSubmitAction extends ActionBase {
 			feeStudentSpecific.setAcademicYear(AcademicYearUtil.getAcademicYearCurrent(academicYearList));
 			feeStudentSpecificList = new FeeStudentSpecificDAO().getFeeStudentSpecificListByStudentCodeAcademicYearCode(feeStudentSpecific.getStudent().getCode(), feeStudentSpecific.getAcademicYear().getCode());
 		}
+		
+		FeeStudentSpecificUtil.setFeeStudentSpecific(feeStudentSpecificList, (List<DTOBase>) getSessionAttribute(FeeDTO.SESSION_FEE_LIST), student);
 		//reset pagination record list
 		pagination.setRecordList(new ArrayList<DTOBase>());
+		
+		setSessionAttribute(FeeStudentSpecificDTO.SESSION_FEESTUDENTSPECIFIC_LIST, feeStudentSpecificList);
 	}
 }

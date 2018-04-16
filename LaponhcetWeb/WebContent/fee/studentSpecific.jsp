@@ -17,7 +17,7 @@
 	List<DTOBase> semesterList = (List<DTOBase>) session.getAttribute(SemesterDTO.SESSION_SEMESTER_LIST);
 	List<DTOBase> feeList = (List<DTOBase>) session.getAttribute(FeeDTO.SESSION_FEE_LIST);
 %>
-	<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4", false, "Search Student Name/Code", "", "SearchValue", FeeStudentSpecificUtil.getStudentName(feeStudentSpecific.getStudent()), 40, TextBoxWebControl.DATA_TYPE_STRING, "onBlur=\"searchPagination(this.value); showTableStudent()\"") %>
+	<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4", false, "Search Student Name/Code", "", "SearchValue", StringUtil.isEmpty(feeStudentSpecific.getStudent().getCode())?studentPagination.getSearchValue():feeStudentSpecific.getStudent().getName(true, false, false), 40, TextBoxWebControl.DATA_TYPE_STRING, "onBlur=\"searchPagination(this.value); showTableStudent()\"") %>
 <%
 if(!StringUtil.isEmpty(feeStudentSpecific.getStudent().getCode())) {
 %>
@@ -25,20 +25,27 @@ if(!StringUtil.isEmpty(feeStudentSpecific.getStudent().getCode())) {
 <%	
 	if(StringUtil.isEmpty(feeStudentSpecific.getSemester().getCode())) {
 %>
-		<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-5", true, "Academic Year", "AcademicYear", academicYearList, feeStudentSpecific.getAcademicYear(), "", "", "") %>
+		<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-5", true, "Academic Year", "AcademicYear", academicYearList, feeStudentSpecific.getAcademicYear(), "", "", "onchange=\"openLink('US0149')\"") %>
 <%			
 	}
 	else {
 %>
-		<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-5", true, "Semester", "Semester", semesterList, feeStudentSpecific.getSemester(), "", "", "") %>
+		<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-5", true, "Semester", "Semester", semesterList, feeStudentSpecific.getSemester(), "", "", "onchange=\"openLink('US0150')\"") %>
 <%		
 	}
 %>
-	<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-4", true, "Fee", "Fee", feeList, feeStudentSpecific.getFee(), "--Select Fee--", "0", "") %>
-	<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-3", true, "Amount", "Amount", "Amount", StringUtil.getFormattedNum(feeStudentSpecific.getAmount(), StringUtil.NUMERIC_STANDARD_FORMAT_NO_COMMA), 10, WebControlBase.DATA_TYPE_DOUBLE, "") %>
-	<%//=new LabelWebControl().getLabelWebControl(sessionInfo, "col-sm-5", "&nbsp;", "AddFee", "<button class='btn btn-warning btn-circle' type='button'><i class='fa fa-times'></i></button>", "") %>
-	<div id='divAddFee' class='col-sm-5'><br><label><b>&nbsp;</b></label><span class='m-t block'><i class='btn btn-warning btn-circle fa fa-times'></i>	</span></div>
+	<%=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-3", true, "Fee", "Fee", feeList, feeStudentSpecific.getFee(), "--Select Fee--", "0", "") %>
+	<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-2", true, "Amount", "Amount", "Amount", StringUtil.getFormattedNum(feeStudentSpecific.getAmount(), StringUtil.NUMERIC_STANDARD_FORMAT_NO_COMMA), 10, WebControlBase.DATA_TYPE_DOUBLE, "") %>
+	<div id='divAddFee' class='col-sm-1'><br><label><b>&nbsp;</b></label><br><i class='btn btn-primary fa fa-plus-circle' onclick="openLink('US0173')"></i>	</div>
 <%
+	if(feeStudentSpecificList.size() >= 1) {
+%>	
+	<div class="col-sm-6">
+		<br><br>
+		<%=WebUtil.getTable("table table-bordered", FeeStudentSpecificUtil.getFeeStudentSpecificListArr(feeStudentSpecificList, 3), 3) %>
+	</div>			
+<%
+	}
 }
 %>
 

@@ -15,8 +15,19 @@ public class DeleteFeeStudentSpecificFeeSubmitAction extends ActionBase {
 	}
 	
 	protected void executeLogic() {
-		List<DTOBase> list = (List<DTOBase>) getSessionAttribute(FeeStudentSpecificDTO.SESSION_FEESTUDENTSPECIFIC_LIST);
+		List<DTOBase> feeStudentSpecificList = (List<DTOBase>) getSessionAttribute(FeeStudentSpecificDTO.SESSION_FEESTUDENTSPECIFIC_LIST);
 		int id = getRequestInt("txtSelectedRecord");
-		DTOUtil.removeObjById(list, id);
+		if(id < 0) { //newly entered
+			DTOUtil.removeObjById(feeStudentSpecificList, id);
+		}
+		else {
+			FeeStudentSpecificDTO feeStudentSpecific = ((FeeStudentSpecificDTO)DTOUtil.getObjById(feeStudentSpecificList, id));
+			if(feeStudentSpecific.getRecordStatus().equalsIgnoreCase(DTOBase.RECORD_STATUS_REMOVE)) {
+				feeStudentSpecific.setRecordStatus("");
+			}
+			else {
+				feeStudentSpecific.setRecordStatus(DTOBase.RECORD_STATUS_REMOVE);
+			}
+		}
 	}
 }

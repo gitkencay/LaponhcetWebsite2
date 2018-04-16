@@ -25,7 +25,7 @@
 	<div class="row">
 		<div class="col-lg-8 col-lg-offset-2 text-center m-t-lg m-b-lg">
 			<p>
-				<strong>&copy; 2017 Recoletos School of Agriculture.</strong><br />
+				<strong>&copy; 2018 Recoletos School of Agriculture.</strong><br />
 				Powered by Technopal Software
 			</p>
 		</div>
