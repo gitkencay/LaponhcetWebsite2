@@ -151,7 +151,6 @@ if(sessionInfo.isCurrentLinkDataEntry()) {
 
 <script>
 	disableOrNot();
-
 	function disableOrNot() {
 		if(document.getElementById("chkSameAsPermanent").checked) {
 			document.getElementById("txtdisableOrNot").value = "1";
