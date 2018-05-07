@@ -2,39 +2,71 @@ package com.laponhcet.action.user;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.mytechnopal.ActionResponse;
 import com.mytechnopal.base.ActionBase;
 import com.mytechnopal.base.DTOBase;
-import com.mytechnopal.dao.LinkDAO;
 import com.mytechnopal.dao.UserDAO;
+import com.mytechnopal.dto.LinkDTO;
 import com.mytechnopal.dto.UserDTO;
 import com.mytechnopal.dto.UserGroupDTO;
-import com.mytechnopal.util.DTOUtil;
-import com.mytechnopal.util.DateTimeUtil;
 
 public class UserAccessAction extends ActionBase {
 	private static final long serialVersionUID = 1L;
-
-	@SuppressWarnings("unchecked")
+	
 	protected void setInput() {
 		UserDTO user = (UserDTO) getSessionAttribute(UserDTO.SESSION_USER + "_ACCESS");		
 		List<DTOBase> userGroupList = (List<DTOBase>) getSessionAttribute(UserGroupDTO.SESSION_USER_GROUP_LIST);
 		user.setUserName(getRequestString("txtUserName"));
 		user.setPassword(getRequestString("txtPassword"));
-		user.setUserGroupCodes(((UserGroupDTO) DTOUtil.getObjById(userGroupList, getRequestInt("cboUserGroup"))).getCode());
-		// Temporary Birthday to avoid error
-		user.setBirthDate(DateTimeUtil.getStrToDateTime("1970-01-01", "yyyy-MM-dd"));
-		// New User Link List
-		String checkedLinks = getRequestString("txtCheckedLinks");
-		if(!checkedLinks.isEmpty()){
-			String[] links = checkedLinks.split("~");
-			List<DTOBase> newListLink = new ArrayList<DTOBase>();
-			for (int i=0; i < links.length ; i++){
-				newListLink.add(new LinkDAO().getLinkByCode(links[i]));
+		user.setActive(getRequestString("rbStatus").equalsIgnoreCase("Active")?true:false);
+		user.setUserGroupCodes(getSelectedCheckBox(userGroupList, "UserGroup"));
+
+		String[] userLinkArr = request.getParameterValues("chkUserLink");
+		List<DTOBase> linkList = new ArrayList<DTOBase>();
+		
+		if(userLinkArr != null) {
+			//add link group list to newUserLinkList 
+			for(int i=0; i<userLinkArr.length; i++) {
+				LinkDTO currentLink = sessionInfo.getLinkByCode(userLinkArr[i]);
+				for(DTOBase linkDTO: sessionInfo.getLinkGroupList(currentLink.getLinkGroup())) {
+				    LinkDTO link = (LinkDTO) linkDTO;
+					linkList.add(link);
+				}
 			}
-			user.setUserLinkList(newListLink);
+			
+			//get parent menu link list
+			List<LinkDTO> parentMenuLinkList = new ArrayList<LinkDTO>();
+			for(DTOBase linkDTO: linkList) {
+			    LinkDTO userLink = (LinkDTO) linkDTO;
+				for(LinkDTO parentMenuLink: sessionInfo.getParentMainLinkListByLinkGroup(userLink.getLinkGroup())) {
+					parentMenuLinkList.add(parentMenuLink);
+				}
+			}
+			
+			//add parent menu link to new user link list
+			for(LinkDTO parentMenuLink: parentMenuLinkList) {
+				boolean isFound = false;
+				for(DTOBase linkDTO: linkList) {
+				    LinkDTO newUserLink = (LinkDTO) linkDTO;
+					if(parentMenuLink.getId() == newUserLink.getId()) {
+						isFound = true;
+						break;
+					}
+				}
+				if(!isFound) {
+					linkList.add(parentMenuLink); 
+					//add link group for parent link not equal to main link
+					if(!parentMenuLink.getLinkGroup().endsWith("0")) {
+						for(LinkDTO link: sessionInfo.getLinkGroupList(parentMenuLink.getLinkGroup())) {
+							if(link.getId()!=parentMenuLink.getId()) {
+								linkList.add(link);
+							}
+						}
+					}
+				}
+			}
 		}
+		user.setUserLinkList(linkList);
 	}
 	
 	protected void validateInput() {

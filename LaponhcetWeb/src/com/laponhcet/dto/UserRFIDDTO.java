@@ -4,6 +4,9 @@ import com.mytechnopal.base.DTOBase;
 public class UserRFIDDTO extends DTOBase {
 	private static final long serialVersionUID = 1L;	
 	
+	public static final String SESSION_USERRFID = "SESSION_USERRFID";
+	public static final String SESSION_USERRFID_LIST = "SESSION_USERRFID_LIST";
+	
 	private String profilePict;
 	private String rfid;
 	private String lastName;

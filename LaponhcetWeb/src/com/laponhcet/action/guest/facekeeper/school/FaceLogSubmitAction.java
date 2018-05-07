@@ -1,4 +1,4 @@
-package com.laponhcet.action.guest.facekeeper;
+package com.laponhcet.action.guest.facekeeper.school;
 
 import java.io.IOException;
 

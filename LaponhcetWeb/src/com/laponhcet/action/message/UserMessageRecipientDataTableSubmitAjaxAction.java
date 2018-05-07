@@ -18,14 +18,11 @@ public class UserMessageRecipientDataTableSubmitAjaxAction extends AjaxActionBas
 	protected void searchRecord() {
 		Pagination pagination = (Pagination) getSessionAttribute(UserDTO.SESSION_USER_PAGINATION);
 		String searchValue = getRequestString("txtSearchValue");
-		System.out.println("Search Value: " + searchValue);
 		if(StringUtil.isEmpty(searchValue)) {
 			pagination.setRecordList(pagination.getRecordListUnfiltered());
-			System.out.println("Empty!");
 		}
 		else{
 			pagination.setRecordList(new UserDAO().getUserListSearchByNameCode(searchValue));
-			System.out.println("May Unod!!-->" + pagination.getRecordList().size());
 		}
 	}
 	
@@ -48,8 +45,11 @@ public class UserMessageRecipientDataTableSubmitAjaxAction extends AjaxActionBas
 			UserDTO user = (UserDTO) pagination.getCurrentPageRecordList().get(i);
 			try {
 				JSONObject jsonObjDetails = new JSONObject();
-				jsonObjDetails.put("name", MessageUtil.getAddRecipientButton(user.getCode()) + user.getName(true, false, false));
-				//jsonObjDetails.put("button", pagination.getRecordButtonStr(sessionInfo, user.getId()).replace("~", ","));
+				jsonObjDetails.put("last_name", user.getLastName());
+				jsonObjDetails.put("first_name", user.getFirstName());
+				jsonObjDetails.put("middle_name", user.getMiddleName());
+				jsonObjDetails.put("cp_number", user.getCpNumber());
+				jsonObjDetails.put("button", MessageUtil.getAddRecipientButton(user.getCode()));
 				jsonArray.put(jsonObjDetails);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

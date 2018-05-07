@@ -19,6 +19,7 @@ import com.mytechnopal.dao.MediaDAO;
 import com.mytechnopal.dao.UpdateKeyDAO;
 import com.mytechnopal.dao.UserDAO;
 import com.mytechnopal.dao.UserLinkDAO;
+import com.mytechnopal.dto.MediaDTO;
 import com.mytechnopal.dto.UserGroupDTO;
 import com.mytechnopal.util.DateTimeUtil;
 import com.mytechnopal.util.StringUtil;
@@ -66,7 +67,7 @@ public class StudentDAO extends DAOBase {
 		new UserRFIDDAO().add(conn, prepStmntList, UserRFIDUtil.getUserRFIDByUser(student));
 				
 		//Media
-		student.setProfilePictInfo("STUDENT", "PROFILE_PICT");
+		student.setProfilePictInfo(student.getTableName(), "PROFILE_PICT");
 		new MediaDAO().add(conn, prepStmntList, student.getProfilePict());
 		
 		//Update key
@@ -237,8 +238,10 @@ public class StudentDAO extends DAOBase {
 	@Override
 	public void executeUpdate(DTOBase obj) {
 		Connection conn = daoConnectorUtil.getConnection();
-		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
 		StudentDTO student = (StudentDTO) obj;
+		MediaDAO mediaDAO = new MediaDAO();
+		MediaDTO mediaExisting = mediaDAO.getMediaByCodeTableField(student.getCode(), student.getTableName(), "PROFILE_PICT");
+		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
 		student.setBaseDataOnUpdate();
 		
 		//Student
@@ -248,10 +251,17 @@ public class StudentDAO extends DAOBase {
 		new UserDAO().update(conn, prepStmntList, student);
 		
 		//UserRFID
-		new UserRFIDDAO().update(conn, prepStmntList, UserRFIDUtil.getUserRFIDByUser(student));
+		//new UserRFIDDAO().update(conn, prepStmntList, UserRFIDUtil.getUserRFIDByUser(student));
 				
 		//Media
-		new MediaDAO().update(conn, prepStmntList, student.getProfilePict());
+		if(mediaExisting == null) {
+			student.setProfilePictInfo(student.getTableName(), "PROFILE_PICT");
+			mediaDAO.add(conn, prepStmntList, student.getProfilePict());
+		}
+		else {
+			mediaDAO.update(conn, prepStmntList, student.getProfilePict());
+		}
+		
 		
 		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 	}

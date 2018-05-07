@@ -17,13 +17,23 @@
 				<div class="col-sm-12">
 					<strong>Name: <%=userAccess.getName(false, false, true)%></strong>
 				</div>
-				<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-3 ", true, "Username", "Username", "UserName", userAccess.getUserName(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
-				<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-3", true, "Password", "Password", "Password", userAccess.getPassword(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
-				<%//=new ComboBoxWebControl().getComboBoxWebControl(sessionInfo, "col-sm-3 m-b", true, "Group", "UserGroup", userGroupList, userAccess.getUserGroupCodes(), "", "", "") %>
-				<%=new RadioButtonWebControl().getRadioButtonWebControl(sessionInfo, "col-sm-3", true, "Status", "Status", new String[] {"Active", "Inactive"}, userAccess.isActive()?"Active":"Inactive", new String[] {"Active", "Inactive"}, "", false) %>
+				<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4 ", true, "Username", "Username", "UserName", userAccess.getUserName(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
+				<%=new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4", true, "Password", "Password", "Password", userAccess.getPassword(), 16, WebControlBase.DATA_TYPE_STRING, "") %>
+				<%=new RadioButtonWebControl().getRadioButtonWebControl(sessionInfo, "col-sm-4", true, "Status", "Status", new String[] {"Active", "Inactive"}, userAccess.isActive()?"Active":"Inactive", new String[] {"Active", "Inactive"}, "", false) %>
+				<div class="col-sm-12">
+               		<br><br>
+					<div class="panel panel-primary">
+			        	<div class="panel-heading">
+			            	<h3>Groups&nbsp;</h3> <input type="checkbox" id="chkUserGroup" onchange="toggleCheckListByPrefixId(this)"> <label for='chkUserGroup'>&nbsp;ALL&nbsp;&nbsp;</label>
+			            </div>
+			            <div class="panel-body">
+							<%=WebUtil.getTable("table", new CheckBoxWebControl().getCheckBoxWebControlArr(sessionInfo, "UserGroup", userGroupList, userAccess.getUserGroupCodes().split("~"), StringUtil.getStrArr(userGroupList), ""), 4) %>
+			            </div>
+			        </div>
+			   	</div>
 				<div class="col-sm-12">
 					<div class="panel panel-default">
-						<%
+			<%
 				int subLinkCtr = 0;
 				for(int i=0; i<sessionInfo.getMainLinkList().size(); i++) {
 					LinkDTO mainLink = (LinkDTO)sessionInfo.getMainLinkList().get(i);
@@ -73,8 +83,7 @@
 					<div class="panel-body">
 						<div class="table-responsive">
 							<table class="table table-striped table-bordered table-hover">
-								<thead>
-								</thead>
+								<thead></thead>
 								<tbody>
 
 									<%
@@ -89,14 +98,6 @@
 						if(sessionInfo.isLinkExist(userAccess.getUserLinkList(), mainLink)) {
 							hasLink = true;
 						}
-			%>
-			
-			
-			
-			
-			<%			
-						
-						
 						if(sessionInfo.isCurrentLinkDataEntry()) {
 			%>				
 										<td <%=hasLink?"style='background-color: #c9fbc9;'":"" %>>&nbsp;&nbsp;&nbsp;<input type="checkbox"

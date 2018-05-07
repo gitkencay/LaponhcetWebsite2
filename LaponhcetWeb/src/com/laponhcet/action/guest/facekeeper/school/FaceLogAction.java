@@ -1,4 +1,4 @@
-package com.laponhcet.action.guest.facekeeper;
+package com.laponhcet.action.guest.facekeeper.school;
 
 import com.laponhcet.dao.FaceLogDAO;
 import com.laponhcet.dao.MessageSMSDAO;

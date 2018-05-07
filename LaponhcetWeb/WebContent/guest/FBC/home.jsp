@@ -24,7 +24,7 @@
 	                <li><a class="page-scroll" href="#research">Research</a></li>                            
 	                <li><a class="page-scroll" href="#myFooter">Contact Us</a></li>
 	            	<li><a data-toggle="modal" href="#modal-login">Login</a></li>
-<!-- 	                <li><a class="page-scroll" href="http://103.47.209.82:8080/ScholastechFBC/MainController" target="_blank">Login</a></li> -->
+<!-- 	                <li><a class="page-scroll" href="http://103.47.210.50:8080/ScholastechFBC/MainController" target="_blank">Login</a></li> -->
 	            </ul>
 	        </div>
 	    </div>
@@ -87,7 +87,7 @@
                     <img src="/static/FBC/images/logo.png" alt="Logo"/><br>
                     <img src="/static/FBC/images/contacts.jpg" alt="Contacts" style="margin-top: -15px;" /><br>
                     <img src="/static/FBC/images/shaping-lives.png" alt="Shaping Lives"/>
-                    <a class="page-scroll" href="http://103.47.209.82:8080/static/FBC/vtour/index.html" target="_blank"><img src="/static/FBC/images/vtour.png" alt="Shaping Lives"/></a>
+                    <a class="page-scroll" href="http://103.47.210.50:8080/static/FBC/vtour/index.html" target="_blank"><img src="/static/FBC/images/vtour.png" alt="Shaping Lives"/></a>
                     
                 </div>
             </div>

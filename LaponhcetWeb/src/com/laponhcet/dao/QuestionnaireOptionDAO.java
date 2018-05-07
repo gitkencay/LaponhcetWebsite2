@@ -10,6 +10,7 @@ import com.mytechnopal.base.DTOBase;
 public class QuestionnaireOptionDAO extends DAOBase {
 	private static final long serialVersionUID = 1L;
 
+	private String qryQuestionnaireOptionList = "QUESTIONNAIRE_OPTION_LIST";
 	private String qryQuestionnaireOptionListByQuestionnaireCode  = "QUESTIONNAIRE_OPTION_LIST_BY_QUESTIONNAIRECODE";
 	@Override
 	public void executeAdd(DTOBase arg0) {
@@ -47,6 +48,10 @@ public class QuestionnaireOptionDAO extends DAOBase {
 
 	}
 
+	public List<DTOBase> getQuestionnaireOptionList() {
+		return getDTOList(qryQuestionnaireOptionList);
+	}
+	
 	public List<DTOBase> getQuestionnaireOptionListByQuestionnaireCode(String questionnaireCode) {
 		return getDTOList(qryQuestionnaireOptionListByQuestionnaireCode, questionnaireCode);
 	}

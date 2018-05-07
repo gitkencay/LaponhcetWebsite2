@@ -10,7 +10,7 @@ public class AddRegisterAction extends ActionBase {
 	protected void setSessionVars(){
 		sessionInfo.setTransitionLink(new String[] {"UE0012", "UE0002", "UE0007"}, new String[] {"UE0003", "UE0008", "UE0010"}, new String[] {"UE0004", "UE0009", "UE0011"}, "UE0005", "UE0006");
 		if((!sessionInfo.isPreviousLinkAddSubmit())) {
-			setSessionAttribute(RegisterDTO.SESSION_REGISTER, new RegisterDTO());
+			setSessionBeforeTrans(RegisterDTO.SESSION_REGISTER, new RegisterDTO());
 		}
 	}
 }

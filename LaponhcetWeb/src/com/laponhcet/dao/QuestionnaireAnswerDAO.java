@@ -19,6 +19,8 @@ public class QuestionnaireAnswerDAO extends DAOBase {
 
 	private String qryQuestionnaireAnswerLast = "QUESTIONNAIRE_ANSWER_LAST";
 	private String qryQuestionnaireAnswerAdd = "QUESTIONNAIRE_ANSWER_ADD";
+	private String qryQuestionnaireAnswerListByQuestionnaireCode = "QUESTIONNAIRE_ANSWER_LIST_BY_QUESTIONNAIRECODE";
+	private String qryQuestionnaireAnswerList = "QUESTIONNAIRE_ANSWER_LIST";
 	
 	public void executeAdd(DTOBase obj) {
 		
@@ -91,6 +93,14 @@ public class QuestionnaireAnswerDAO extends DAOBase {
 			code = questionnaireGroupCode + nextSeriesStr;
 		}
 		return code;
+	}
+	
+	public List<DTOBase> getQuestionnaireAnswerList() {
+		return getDTOList(qryQuestionnaireAnswerList);
+	}
+	
+	public List<DTOBase> getQuestionnaireAnswerListByQuestionnaireCode(String questionnaireCode) {
+		return getDTOList(qryQuestionnaireAnswerListByQuestionnaireCode, questionnaireCode);
 	}
 	
 	@Override

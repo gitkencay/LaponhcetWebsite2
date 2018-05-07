@@ -3,8 +3,11 @@ package com.laponhcet.action.message;
 import java.util.List;
 
 import com.laponhcet.dao.MessageDAO;
+import com.laponhcet.dto.MessageAcademicProgramGroupDTO;
+import com.laponhcet.dto.MessageAcademicProgramSubgroupDTO;
+import com.laponhcet.dto.MessageCourseDTO;
 import com.laponhcet.dto.MessageDTO;
-import com.laponhcet.dto.MessageTypeDTO;
+import com.laponhcet.dto.MessageIndividualDTO;
 import com.laponhcet.util.MessageUtil;
 import com.mytechnopal.Pagination;
 import com.mytechnopal.base.ActionBase;
@@ -23,7 +26,11 @@ public class UpdateMessageConfirmAction extends ActionBase {
 		if(actionResponse.isSuccess()) {
 			Pagination pagination = (Pagination) getSessionAttribute(MessageDTO.SESSION_MESSAGE_PAGINATION);
 			pagination.updateList((MessageDTO) getSessionAttribute(MessageDTO.SESSION_MESSAGE), DAOBase.DAO_ACTION_UPDATE);
-			MessageUtil.setPaginationRecord(sessionInfo, pagination, (List<DTOBase>) getSessionAttribute(MessageTypeDTO.SESSION_MESSAGE_TYPE_LIST));
+			List<DTOBase> messageIndividualList = (List<DTOBase>) getSessionAttribute(MessageIndividualDTO.SESSION_MESSAGE_INDIVIDUAL_LIST);
+			List<DTOBase> messageAcademicProgramGroupList = (List<DTOBase>) getSessionAttribute(MessageAcademicProgramGroupDTO.SESSION_MESSAGE_ACADEMIC_PROGRAM_GROUP_LIST);
+			List<DTOBase> messageAcademicProgramSubgroupList = (List<DTOBase>) getSessionAttribute(MessageAcademicProgramSubgroupDTO.SESSION_MESSAGE_ACADEMIC_PROGRAM_SUBGROUP_LIST);
+			List<DTOBase> messageCourseList = (List<DTOBase>) getSessionAttribute(MessageCourseDTO.SESSION_MESSAGE_COURSE_LIST);
+			MessageUtil.setPaginationRecord(sessionInfo, pagination, messageIndividualList, messageAcademicProgramGroupList, messageAcademicProgramSubgroupList, messageCourseList);
 		}
 		sessionInfo.setCurrentLink(sessionInfo.getListLink());
 	}

@@ -31,10 +31,17 @@
 <script src="/static/webcam/webcam.js" type="text/javascript"></script>
 
 <%
-if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG)) {
+if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG_SCHOOL)) {
 %>
 	<!-- FaceKeeper -->
-	<jsp:include flush="true" page="facekeeper/css.jsp"></jsp:include>
+	<jsp:include flush="true" page="facekeeper/school/css.jsp"></jsp:include>
+	<!-- FaceKeeper -->
+<%
+} 
+else if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG_EVENT)) {
+%>
+	<!-- FaceKeeper -->
+	<jsp:include flush="true" page="facekeeper/event/css.jsp"></jsp:include>
 	<!-- FaceKeeper -->
 <%
 } 
@@ -195,7 +202,7 @@ else {
 %>
 </head>
 <%
-if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG)) {
+if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG_SCHOOL) || sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG_EVENT)) {
 %>
 <body onload="refreshAt(1,0,0);">
 <%
@@ -211,7 +218,7 @@ else {
 		<input id="txtSelectedLink" name="txtSelectedLink" type="hidden" value="" />
 		<%
 if(user.getUserGroupCodes().equalsIgnoreCase(UserGroupDTO.USER_GROUP_GUEST_CODE)) {
-	if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG)) { //FaceKeeper
+	if(sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG_SCHOOL) || sessionInfo.getCurrentLink().getCode().equalsIgnoreCase(LinkDTO.LINK_CODE_FACELOG_EVENT)) { //FaceKeeper
 %>
 		<div class="row">
 			<jsp:include flush="true" page="<%=sessionInfo.getCurrentLink().getPage()%>"></jsp:include>

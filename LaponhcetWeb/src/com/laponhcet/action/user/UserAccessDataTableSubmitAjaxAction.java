@@ -1,5 +1,6 @@
 package com.laponhcet.action.user;
 import java.io.IOException;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,9 +9,12 @@ import org.json.JSONObject;
 import com.laponhcet.util.UserAccessUtil;
 import com.mytechnopal.Pagination;
 import com.mytechnopal.base.AjaxActionBase;
+import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.dao.UserDAO;
 import com.mytechnopal.dto.UserDTO;
+import com.mytechnopal.dto.UserGroupDTO;
 import com.mytechnopal.util.StringUtil;
+import com.mytechnopal.util.UserGroupUtil;
 
 public class UserAccessDataTableSubmitAjaxAction extends AjaxActionBase {
 	private static final long serialVersionUID = 1L;
@@ -33,6 +37,7 @@ public class UserAccessDataTableSubmitAjaxAction extends AjaxActionBase {
 	protected void setPaginationList() {
 		Pagination pagination = (Pagination) getSessionAttribute(UserDTO.SESSION_USER_PAGINATION);
 		int currentPageTotalRecord = pagination.getCurrentPageRecordList().size();
+		List<DTOBase> userGroupList = (List<DTOBase>) getSessionAttribute(UserGroupDTO.SESSION_USER_GROUP_LIST);
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObj = new JSONObject();
 		try {
@@ -47,13 +52,20 @@ public class UserAccessDataTableSubmitAjaxAction extends AjaxActionBase {
 		}
 		for(int i=0; i<currentPageTotalRecord; i++) {
 			UserDTO user = (UserDTO) pagination.getCurrentPageRecordList().get(i);
+			String userGroups = "";
+			if(user.getUserGroupCodes().split("~").length == 0) {
+				userGroups = UserGroupUtil.getUserGroupStr(userGroupList, user.getUserGroupCodes());
+			}
+			else {
+				userGroups = UserGroupUtil.getUserGroupListStr(userGroupList, user.getUserGroupCodes().split("~"));
+			}
 			try {
 				JSONObject jsonObjDetails = new JSONObject();
 				jsonObjDetails.put("id", user.getCode());
 				jsonObjDetails.put("lastName", user.getLastName());
 				jsonObjDetails.put("firstName", user.getFirstName());
 				jsonObjDetails.put("middleName", user.getMiddleName());
-				jsonObjDetails.put("group", user.getUserGroupCodes());
+				jsonObjDetails.put("group", userGroups);
 				//jsonObjDetails.put("button", pagination.getRecordButtonStr(sessionInfo, user.getId()).replace("~", ","));
 				jsonObjDetails.put("button", UserAccessUtil.getRecordButtonStr(sessionInfo, user));
 				jsonArray.put(jsonObjDetails);

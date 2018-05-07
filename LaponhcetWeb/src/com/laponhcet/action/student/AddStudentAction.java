@@ -14,7 +14,7 @@ import com.mytechnopal.dto.ReligionDTO;
 public class AddStudentAction extends ActionBase {
 	private static final long serialVersionUID = 1L;
 
-	protected void setSessionVars(){
+	protected void setSessionVars() {
 		sessionInfo.setTransitionLink(new String[] {"US0095", "US0057", "US0062"}, new String[] {"US0058", "US0063", "US0065"}, new String[] {"US0059", "US0064", "US0066"}, "US0060", "US0061");
 		if(!sessionInfo.isPreviousLinkAddSubmit()) {
 			setSessionAttribute(CityDTO.SESSION_CITY_LIST, new CityDAO().getCityList());

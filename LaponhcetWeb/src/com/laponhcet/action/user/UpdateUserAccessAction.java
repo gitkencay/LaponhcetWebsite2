@@ -8,7 +8,6 @@ import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.dao.UserGroupDAO;
 import com.mytechnopal.dao.UserLinkDAO;
 import com.mytechnopal.dto.UserDTO;
-import com.mytechnopal.dto.UserGroupDTO;
 import com.mytechnopal.util.DTOUtil;
 
 public class UpdateUserAccessAction extends ActionBase {
@@ -23,7 +22,6 @@ public class UpdateUserAccessAction extends ActionBase {
 			UserDTO user = (UserDTO) obj;
 			user.setUserLinkList(new UserLinkDAO().getUserLinkListByUserCode(user.getCode()));
 			List<DTOBase> userGroupList = new UserGroupDAO().getUserGroupList(true);
-			setSessionAttribute(UserGroupDTO.SESSION_USER_GROUP_LIST, userGroupList);
 			setSessionAttribute(UserDTO.SESSION_USER + "_ORIG", user);
 			setSessionBeforeTrans(UserDTO.SESSION_USER + "_ACCESS", user.getUser());
 		}

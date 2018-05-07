@@ -36,6 +36,7 @@ public class StudentDTO extends UserDTO {
 	
 	public StudentDTO() {
 		super();
+		super.setTableName("student");
 		super.getReligion().setCode(SettingsUtil.DEFAULT_RELIGION);
 		super.getCityPermanent().setCode(SettingsUtil.DEFAULT_CITY);
 		super.getCityPresent().setCode(SettingsUtil.DEFAULT_CITY);

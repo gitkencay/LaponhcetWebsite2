@@ -1,6 +1,7 @@
 package com.laponhcet.dto;
 
 import java.util.Date;
+import java.util.List;
 
 import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.util.DateTimeUtil;
@@ -37,6 +38,7 @@ public class MessageDTO extends DTOBase {
 	private String contentWebHeadline;
 	private String contentFaceKeeper;
 	private String source;
+	private List<DTOBase> recipientList;
 
 	//Add specific obj list here
 	
@@ -139,5 +141,13 @@ public class MessageDTO extends DTOBase {
 
 	public void setSource(String source) {
 		this.source = source;
+	}
+
+	public List<DTOBase> getRecipientList() {
+		return recipientList;
+	}
+
+	public void setRecipientList(List<DTOBase> recipientList) {
+		this.recipientList = recipientList;
 	}
 }

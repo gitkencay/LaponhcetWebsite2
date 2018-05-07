@@ -1,6 +1,8 @@
 package com.laponhcet.dto;
 
 import java.sql.Timestamp;
+
+import com.mytechnopal.Report;
 import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.util.DateTimeUtil;
 
@@ -10,6 +12,9 @@ public class FaceLogDTO extends DTOBase {
 	public static final String SESSION_FACELOG = "SESSION_FACELOG";
 	public static final String SESSION_FACELOG_LIST = "SESSION_FACELOG_LIST";
 	public static final String SESSION_FACELOG_PAGINATION = "SESSION_FACELOG_PAGINATION";
+	
+	public static final String[] PAGINATION_SEARCH_CRITERIA_LIST = new String[] {"Name", "ID Number"};
+	public static final String[] PAGINATION_PERIOD_CRITERIA_LIST = new String[] {Report.REPORT_DATE_BY_DAY, Report.REPORT_DATE_FROM_TO, Report.REPORT_DATE_BY_MONTH};
 	
 	private UserRFIDDTO userRFID;
 	private Timestamp timeLog;

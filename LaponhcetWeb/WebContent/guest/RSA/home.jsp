@@ -1,3 +1,16 @@
+<%@ page import="com.mytechnopal.base.*"%>
+<%@ page import="com.mytechnopal.*" %>
+<%@ page import="com.mytechnopal.dto.*" %>
+<%@ page import="com.mytechnopal.util.*" %>
+<%@ page import="com.mytechnopal.webcontrol.*" %>
+<%@ page import="com.laponhcet.dto.*" %> 
+<%@ page import="com.laponhcet.dao.*" %> 
+<%@ page import="com.laponhcet.util.*" %>
+<%@ page import="java.util.*" %>
+<%
+	SessionInfo sessionInfo = (SessionInfo) session.getAttribute(SessionInfo.SESSION_INFO);
+	QuestionnaireGroupDTO questionnaireGroup = (QuestionnaireGroupDTO) session.getAttribute(QuestionnaireGroupDTO.SESSION_QUESTIONNAIRE_GROUP);
+%>
 <div class="navbar-wrapper">
 	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -15,12 +28,55 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a id="nav-button" class="page-scroll" href="#page-top">Home</a></li>
 					<li><a id="nav-button" class="page-scroll" href="#survey">ROLEx Survey</a></li>
-					<li><a id="nav-button" class="page-scroll" href="#streaming">Live Streaming</a></li>
+					<li><a id="nav-button" class="page-scroll" href="#streaming">Live Stream</a></li>
+					<li><a id="nav-button" class="page-scroll" href="#featuredVideo">Featured Video</a></li>
 					<li><a id="nav-button" class="page-scroll" href="#contactUs">Contact Us</a></li>
+					<li><a data-toggle="modal" href="#login">Login</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
+</div>
+
+<div id="login" class="modal fade" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-6 b-r">
+						<h3 class="m-t-none m-b">Sign in</h3>
+						<p>Sign in today for more experience.</p>
+						<div class="form-group">
+							<label>User Name</label> <input name="txtUsernName" type="text"
+								placeholder="User Name" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Password</label> <input name="txtPassword" type="password"
+								placeholder="Password" class="form-control">
+						</div>
+						<div>
+							<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+								type="submit" onclick="openLink('G00002')">
+								<strong>Log in</strong>
+							</button>
+							<label> <input type="checkbox" class="i-checks">
+								Remember me
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<h4>Not yet a member?</h4>
+						<p>Please Register</p>
+						<p class="text-center">
+							<a href="#register"
+								onblur="$('#modal-form').modal('hide');$('.modal-backdrop').remove();"><i
+								class="fa fa-sign-in big-icon"></i></a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div id="inSlider" class="carousel carousel-fade" data-ride="carousel">
@@ -113,9 +169,15 @@
 	<jsp:include page="streaming.jsp"></jsp:include>
 </section>
 <br><br>
+<section id="featuredVideo" class="container">
+	<jsp:include page="featuredVideo.jsp"></jsp:include>
+</section>
+<br><br>
 <section id="contactUs" class="gray-section contact">
 	<jsp:include page="contactUs.jsp"></jsp:include>
 </section>
+
+
 <script>
     $(document).ready(function () {
         $('body').scrollspy({
@@ -170,7 +232,15 @@
 </script>
 
 <script>
-$(document).on('click', '#nav-button', function(event) { 
-    $("#close").click(); 
-});
+function scrollToSection(sectionId){
+    var top = document.getElementById(sectionId).offsetTop; 
+    window.scrollTo(0, top);                        
+}
+<%
+if(!StringUtil.isEmpty(questionnaireGroup.getCode())) {
+%>
+	scrollToSection("survey");
+<%
+}
+%>
 </script>

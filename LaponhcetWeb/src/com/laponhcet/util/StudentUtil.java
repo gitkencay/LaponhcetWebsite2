@@ -80,7 +80,7 @@ public class StudentUtil implements Serializable {
 	}
 	
 	public static StudentDTO setStudent(StudentDTO student, UserDTO user, List<DTOBase> academicProgramList) {	
-		MediaDTO profilePict = new MediaDAO().getMediaByCodeTableField(user.getCode(), "STUDENT", "PROFILE_PICT");
+		MediaDTO profilePict = new MediaDAO().getMediaByCodeTableField(user.getCode(), student.getTableName(), "PROFILE_PICT");
 		student.setProfilePict(profilePict == null?user.getProfilePict():profilePict);
 		student.setRfid(user.getRfid());
 		student.setFacebookId(user.getFacebookId());

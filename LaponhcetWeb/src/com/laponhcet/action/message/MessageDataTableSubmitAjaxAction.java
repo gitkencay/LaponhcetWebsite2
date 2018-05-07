@@ -1,6 +1,7 @@
 package com.laponhcet.action.message;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -8,37 +9,90 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.laponhcet.dao.MessageDAO;
+import com.laponhcet.dto.MessageAcademicProgramGroupDTO;
+import com.laponhcet.dto.MessageAcademicProgramSubgroupDTO;
+import com.laponhcet.dto.MessageCourseDTO;
 import com.laponhcet.dto.MessageDTO;
-import com.laponhcet.dto.MessageTypeDTO;
+import com.laponhcet.dto.MessageIndividualDTO;
 import com.laponhcet.util.MessageUtil;
 import com.mytechnopal.Pagination;
 import com.mytechnopal.base.AjaxActionBase;
 import com.mytechnopal.base.DTOBase;
+import com.mytechnopal.util.DTOUtil;
 import com.mytechnopal.util.StringUtil;
 
 public class MessageDataTableSubmitAjaxAction extends AjaxActionBase {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	protected void searchRecord() {
 		Pagination pagination = (Pagination) getSessionAttribute(MessageDTO.SESSION_MESSAGE_PAGINATION);
+		String searchCriteria = getRequestString("cboSearchCriteria");
 		String searchValue = getRequestString("txtSearchValue");
+		List<DTOBase> messageIndividualList = (List<DTOBase>) getSessionAttribute(MessageIndividualDTO.SESSION_MESSAGE_INDIVIDUAL_LIST);
+		List<DTOBase> messageAcademicProgramGroupList = (List<DTOBase>) getSessionAttribute(MessageAcademicProgramGroupDTO.SESSION_MESSAGE_ACADEMIC_PROGRAM_GROUP_LIST);
+		List<DTOBase> messageAcademicProgramSubgroupList = (List<DTOBase>) getSessionAttribute(MessageAcademicProgramSubgroupDTO.SESSION_MESSAGE_ACADEMIC_PROGRAM_SUBGROUP_LIST);
+		List<DTOBase> messageCourseList = (List<DTOBase>) getSessionAttribute(MessageCourseDTO.SESSION_MESSAGE_COURSE_LIST);
+		List<DTOBase> newMessageList = new ArrayList<DTOBase>();
 		if(StringUtil.isEmpty(searchValue)) {
-			pagination.setRecordList(pagination.getRecordListUnfiltered());
-		}
-		else {
-			String searchCriteria = getRequestString("cboSearchCriteria");
-			if(searchCriteria.equalsIgnoreCase(MessageDTO.PAGINATION_SEARCH_CRITERIA_LIST[0])) {
-				pagination.setRecordList(new MessageDAO().getMessageListSearchByContent(searchValue));
+			newMessageList = pagination.getRecordListUnfiltered();
+		}else{
+			if(searchCriteria.equalsIgnoreCase(MessageDTO.PAGINATION_SEARCH_CRITERIA_LIST[0])){
+				newMessageList = new MessageDAO().getMessageListSearchByContent(searchValue);
+			}else if(searchCriteria.equalsIgnoreCase(MessageDTO.PAGINATION_SEARCH_CRITERIA_LIST[1])){
+				if(searchValue.equalsIgnoreCase(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[0])){
+					for(DTOBase obj: messageIndividualList){
+						MessageIndividualDTO messageIndividual = (MessageIndividualDTO) obj;
+						MessageDTO message = (MessageDTO) DTOUtil.getObjByCode(pagination.getRecordListUnfiltered(), messageIndividual.getMessageCode());
+						if(message!=null && DTOUtil.getObjByCode(newMessageList, message.getCode()) == null){
+							newMessageList.add(message);
+						}
+					}
+				}else if(searchValue.equalsIgnoreCase(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[1])){
+					for(DTOBase obj: messageAcademicProgramGroupList){
+						MessageAcademicProgramGroupDTO messageAcademicProgramGroupDTO = (MessageAcademicProgramGroupDTO) obj;
+						MessageDTO message = (MessageDTO) DTOUtil.getObjByCode(pagination.getRecordListUnfiltered(), messageAcademicProgramGroupDTO.getMessage().getCode());
+						if(message!=null && DTOUtil.getObjByCode(newMessageList, message.getCode()) == null){
+							newMessageList.add(message);
+						}
+					}
+				}else if(searchValue.equalsIgnoreCase(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[2])){
+					for(DTOBase obj: messageAcademicProgramSubgroupList){
+						MessageAcademicProgramSubgroupDTO messageAcademicProgramSubgroupDTO = (MessageAcademicProgramSubgroupDTO) obj;
+						MessageDTO message = (MessageDTO) DTOUtil.getObjByCode(pagination.getRecordListUnfiltered(), messageAcademicProgramSubgroupDTO.getMessage().getCode());
+						if(message!=null && DTOUtil.getObjByCode(newMessageList, message.getCode()) == null){
+							newMessageList.add(message);
+						}
+					}
+				}else if(searchValue.equalsIgnoreCase(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[3])){
+					for(DTOBase obj: messageCourseList){
+						MessageCourseDTO messageCourseDTO = (MessageCourseDTO) obj;
+						MessageDTO message = (MessageDTO) DTOUtil.getObjByCode(pagination.getRecordListUnfiltered(), messageCourseDTO.getMessage().getCode());
+						if(message!=null && DTOUtil.getObjByCode(newMessageList, message.getCode()) == null){
+							newMessageList.add(message);
+						}
+					}
+				}
+			}else if(searchCriteria.equalsIgnoreCase(MessageDTO.PAGINATION_SEARCH_CRITERIA_LIST[2])){
+				for(DTOBase messageObj: pagination.getRecordListUnfiltered()){
+					MessageDTO message = (MessageDTO) messageObj;
+					if(StringUtil.isStrExistInStrArr(message.getMessageTypeCodes().split("~"), searchValue)){
+						newMessageList.add(message);
+					}
+				}
 			}
 		}
+		pagination.setRecordList(newMessageList);
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void setPaginationDataList() {
+	protected void setPaginationList() {
 		Pagination pagination = (Pagination) getSessionAttribute(MessageDTO.SESSION_MESSAGE_PAGINATION);
-		List<DTOBase> messageTypeList = (List<DTOBase>) getSessionAttribute(MessageTypeDTO.SESSION_MESSAGE_TYPE_LIST);
 		int currentPageTotalRecord = pagination.getCurrentPageRecordList().size();
-		
+		List<DTOBase> messageIndividualList = (List<DTOBase>) getSessionAttribute(MessageIndividualDTO.SESSION_MESSAGE_INDIVIDUAL_LIST);
+		List<DTOBase> messageAcademicProgramGroupList = (List<DTOBase>) getSessionAttribute(MessageAcademicProgramGroupDTO.SESSION_MESSAGE_ACADEMIC_PROGRAM_GROUP_LIST);
+		List<DTOBase> messageAcademicProgramSubgroupList = (List<DTOBase>) getSessionAttribute(MessageAcademicProgramSubgroupDTO.SESSION_MESSAGE_ACADEMIC_PROGRAM_SUBGROUP_LIST);
+		List<DTOBase> messageCourseList = (List<DTOBase>) getSessionAttribute(MessageCourseDTO.SESSION_MESSAGE_COURSE_LIST);
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObj = new JSONObject();
 		try {
@@ -55,9 +109,9 @@ public class MessageDataTableSubmitAjaxAction extends AjaxActionBase {
 			MessageDTO message = (MessageDTO) pagination.getCurrentPageRecordList().get(i);
 			try {
 				JSONObject jsonObjDetails = new JSONObject();
-				jsonObjDetails.put("type", MessageUtil.getMessageTypeCodeDescription(messageTypeList, message.getMessageTypeCodes()));
+				jsonObjDetails.put("code", message.getCode());
+				jsonObjDetails.put("type", MessageUtil.getMessageTypeCodesHTML(message, messageIndividualList, messageAcademicProgramGroupList, messageAcademicProgramSubgroupList, messageCourseList));
 				jsonObjDetails.put("message", message.getContent());
-				jsonObjDetails.put(Pagination.PAGINATION_TABLE_ROW_LINK_BUTTON, pagination.getLinkButtonStr(sessionInfo, message.getId()).replace("~", ","));
 				jsonArray.put(jsonObjDetails);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

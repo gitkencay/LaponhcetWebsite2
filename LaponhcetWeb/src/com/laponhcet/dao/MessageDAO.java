@@ -7,15 +7,19 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import com.laponhcet.dto.MessageAcademicProgramGroupDTO;
+import com.laponhcet.dto.MessageAcademicProgramSubgroupDTO;
+import com.laponhcet.dto.MessageCourseDTO;
 import com.laponhcet.dto.MessageDTO;
+import com.laponhcet.dto.MessageIndividualDTO;
 import com.laponhcet.dto.MessageSMSDTO;
-import com.mysql.jdbc.Messages;
+import com.laponhcet.util.MessageUtil;
 import com.mytechnopal.ActionResponse;
 import com.mytechnopal.base.DAOBase;
 import com.mytechnopal.base.DTOBase;
 import com.mytechnopal.dao.UserDAO;
-import com.mytechnopal.dao.UserGroupDAO;
 import com.mytechnopal.dto.UserDTO;
 import com.mytechnopal.util.DTOUtil;
 import com.mytechnopal.util.DateTimeUtil;
@@ -37,52 +41,74 @@ public class MessageDAO extends DAOBase {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void executeAdd(DTOBase obj) {
-		List<DTOBase> userList = new UserDAO().getUserList();
-		List<DTOBase> userGroupList = new UserGroupDAO().getUserGroupList(true);
-		List<DTOBase> academicProgramList = new AcademicProgramDAO().getAcademicProgramList();
-		List<DTOBase> academicProgramGroupList = new AcademicProgramGroupDAO().getAcademicProgramGroupList();
-		List<DTOBase> academicProgramSubgroupList = new AcademicProgramSubgroupDAO().getAcademicProgramSubgroupList();
-		
-		
 		MessageDTO message = (MessageDTO) obj;
 		Connection conn = daoConnectorUtil.getConnection();
 		List<PreparedStatement> prepStmntList = new ArrayList<PreparedStatement>();
+		String[] messageTypeCodes = message.getMessageTypeCodes().split(Pattern.quote("|"));
 		message.setCode(getGeneratedCode());
+		message.setMessageTypeCodes(messageTypeCodes[2]);
 		message.setBaseDataOnInsert();
 		add(conn, prepStmntList, message);
 		
-		String[] messageTypeCodes =  message.getMessageTypeCodes().split("~");
-
-		// For MessageSMSDTO
-		if(!StringUtil.isEmpty(message.getContentSMS())){
-			for(int i = 0; i < messageTypeCodes.length; i++){
-				// For UserGroup
-				if(DTOUtil.getObjByCode(userGroupList, messageTypeCodes[i])!=null){
-					for(DTOBase userObj: userList){
-						UserDTO user = (UserDTO) userObj;
-						if(user.getUserGroup().getCode().equalsIgnoreCase( messageTypeCodes[i])){
-							MessageSMSDTO messageSMS = new MessageSMSDTO();
-							messageSMS.setMessageCode(message.getCode());
-							messageSMS.setCpNumber(user.getCpNumber());
-							messageSMS.setMessage(message.getContentSMS());
-							messageSMS.setPriority(message.getPriority());
-							new MessageSMSDAO().executeAdd(messageSMS);
-						}
-					}
-				// For AcademicProgram
-				}else if(DTOUtil.getObjByCode(academicProgramList, messageTypeCodes[i])!=null){
-					System.out.println("NOT YET DONE >> academicProgramList");
-				// For AcademicProgramGroup
-				}else if(DTOUtil.getObjByCode(academicProgramGroupList, messageTypeCodes[i])!=null){
-					System.out.println("NOT YET DONE >> academicProgramGroupList");
-				// For AcademicProgramSubgroup
-				}else if(DTOUtil.getObjByCode(academicProgramSubgroupList, messageTypeCodes[i])!=null){
-					System.out.println("NOT YET DONE >> academicProgramSubgroupList");
+		if(message.getRecipientList().size()>0){
+			List<DTOBase> userList = new UserDAO().getUserList();
+			for(DTOBase userObj: message.getRecipientList()){
+				UserDTO user = (UserDTO) DTOUtil.getObjByCode(userList, userObj.getCode());
+				if(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[0].equalsIgnoreCase(messageTypeCodes[0])){
+					sendMessageIndividual(message, user);
+				}else if(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[1].equalsIgnoreCase(messageTypeCodes[0])){
+					sendMessageAcademicProgramGroup(message, messageTypeCodes);
+				}else if(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[2].equalsIgnoreCase(messageTypeCodes[0])){
+					sendMessageAcademicProgramSubgroup(message, messageTypeCodes);
+				}else if(MessageDTO.SCHOOL_MESSAGE_TYPE_CODE_LIST[3].equalsIgnoreCase(messageTypeCodes[0])){
+					sendMessageCourse(message, messageTypeCodes);
+				}
+				
+				if(StringUtil.isStrExistInStrArr(messageTypeCodes[2].split("~"), MessageDTO.SCHOOL_MESSAGE_MEDIUM_CODE_LIST[1])){
+					sendMessageSMS(message, user);
 				}
 			}
 		}
+		message.setMessageTypeCodes(String.join("|", messageTypeCodes));
 		result.put(ActionResponse.SESSION_ACTION_RESPONSE, executeIUD(conn, prepStmntList));
 		
+	}
+	
+	protected void sendMessageIndividual(MessageDTO message, UserDTO user){
+		MessageIndividualDTO messageIndividual = new MessageIndividualDTO();
+		messageIndividual.setMessageCode(message.getCode());
+		messageIndividual.setUser(user);
+		new MessageIndividualDAO().executeAdd(messageIndividual);
+	}
+	
+	protected void sendMessageAcademicProgramGroup(MessageDTO message, String[] messageTypeCodes){
+		MessageAcademicProgramGroupDTO messageAcademicProgramGroup = new MessageAcademicProgramGroupDTO();
+		messageAcademicProgramGroup.setMessage(message);
+		messageAcademicProgramGroup.setAcademicProgramGroupCodes(messageTypeCodes[1]);
+		new MessageAcademicProgramGroupDAO().executeAdd(messageAcademicProgramGroup);
+	}
+	
+	protected void sendMessageAcademicProgramSubgroup(MessageDTO message, String[] messageTypeCodes){
+		MessageAcademicProgramSubgroupDTO messageAcademicProgramSubgroup = new MessageAcademicProgramSubgroupDTO();
+		messageAcademicProgramSubgroup.setMessage(message);
+		messageAcademicProgramSubgroup.setAcademicProgramSubgroupCodes(messageTypeCodes[1]);
+		new MessageAcademicProgramSubgroupDAO().executeAdd(messageAcademicProgramSubgroup);
+	}
+	
+	protected void sendMessageCourse(MessageDTO message, String[] messageTypeCodes){
+		MessageCourseDTO messageCourse = new MessageCourseDTO();
+		messageCourse.setMessage(message);
+		messageCourse.setCourseCode(messageTypeCodes[1]);
+		new MessageCourseDAO().executeAdd(messageCourse);
+	}
+	
+	protected void sendMessageSMS(MessageDTO message, UserDTO user){
+		MessageSMSDTO messageSMS = new MessageSMSDTO();
+		messageSMS.setMessageCode(message.getCode());
+		messageSMS.setMessage(message.getContentSMS());
+		messageSMS.setCpNumber(user.getCpNumber());
+		messageSMS.setPriority(message.getPriority());
+		new MessageSMSDAO().executeAdd(messageSMS);
 	}
 	
 	public String getGeneratedCode(){
@@ -104,10 +130,11 @@ public class MessageDAO extends DAOBase {
 			prepStmnt.setString(7, message.getContentSMS());
 			prepStmnt.setString(8, message.getContentWebHeadline());
 			prepStmnt.setString(9, message.getContentFaceKeeper());
-			prepStmnt.setString(10, message.getAddedBy());
-			prepStmnt.setTimestamp(11, message.getAddedTimestamp());
-			prepStmnt.setString(12, message.getUpdatedBy());
-			prepStmnt.setTimestamp(13, message.getUpdatedTimestamp());	
+			prepStmnt.setString(10, message.getSource());
+			prepStmnt.setString(11, message.getAddedBy());
+			prepStmnt.setTimestamp(12, message.getAddedTimestamp());
+			prepStmnt.setString(13, message.getUpdatedBy());
+			prepStmnt.setTimestamp(14, message.getUpdatedTimestamp());	
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -174,9 +201,10 @@ public class MessageDAO extends DAOBase {
 			prepStmnt.setString(7, message.getContentSMS());
 			prepStmnt.setString(8, message.getContentWebHeadline());
 			prepStmnt.setString(9, message.getContentFaceKeeper());
-			prepStmnt.setString(10, message.getUpdatedBy());
-			prepStmnt.setTimestamp(11, message.getUpdatedTimestamp());	
-			prepStmnt.setInt(12, message.getId());
+			prepStmnt.setString(10, message.getSource());
+			prepStmnt.setString(11, message.getUpdatedBy());
+			prepStmnt.setTimestamp(12, message.getUpdatedTimestamp());	
+			prepStmnt.setInt(13, message.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -218,13 +246,14 @@ public class MessageDAO extends DAOBase {
 		message.setId((Integer) getDBVal(resultSet, "id"));
 		message.setCode((String) getDBVal(resultSet, "code"));
 		message.setContent((String) getDBVal(resultSet, "content"));
-		message.setPriority((Integer) getDBVal(resultSet, "priority"));
+		message.setPriority((Integer) (getDBVal(resultSet, "priority")));
 		message.setValidTimestampStart((Timestamp) getDBVal(resultSet, "valid_timestamp_start"));
 		message.setValidTimestampEnd((Timestamp) getDBVal(resultSet, "valid_timestamp_end"));
 		message.setMessageTypeCodes((String) getDBVal(resultSet, "message_type_codes"));
 		message.setContentSMS((String) getDBVal(resultSet, "content_sms"));
 		message.setContentWebHeadline((String) getDBVal(resultSet, "content_web_headline"));
 		message.setContentFaceKeeper((String) getDBVal(resultSet, "content_face_keeper"));
+		message.setSource((String) getDBVal(resultSet, "source"));
 		message.setAddedBy((String) getDBVal(resultSet, "added_by"));
 		message.setAddedTimestamp((Timestamp) getDBVal(resultSet, "added_timestamp"));
 		message.setUpdatedBy((String) getDBVal(resultSet, "updated_by"));

@@ -17,7 +17,7 @@ public class PatientDTO extends UserDTO {
 	public static final String AWARENESS_METHOD_WALKIN = "WALK IN";
 	public static final String AWARENESS_METHOD_ADVERTISEMENT = "ADVERTISEMENT";
 	public static final String AWARENESS_METHOD_INTERNET = "INTERNET";
-	public static final String AWARENESS_METHOD_FRIEND = "WALK IN";
+	public static final String AWARENESS_METHOD_FRIEND = "FRIEND";
 	
 	private String streetOffice;
 	private String barangayOffice;

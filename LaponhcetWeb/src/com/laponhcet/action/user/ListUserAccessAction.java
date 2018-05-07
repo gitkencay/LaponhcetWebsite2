@@ -11,6 +11,7 @@ import com.mytechnopal.dao.UserDAO;
 import com.mytechnopal.dao.UserGroupDAO;
 import com.mytechnopal.dto.UserDTO;
 import com.mytechnopal.dto.UserGroupDTO;
+import com.mytechnopal.util.UserGroupUtil;
 
 public class ListUserAccessAction extends ActionBase {
 	private static final long serialVersionUID = 1L;
@@ -28,17 +29,26 @@ public class ListUserAccessAction extends ActionBase {
 			pagination.setRecordListUnfiltered(userList);
 			pagination.setRecordList(userList);
 			pagination.setAjaxResultDetailsList(new String[] {"id", "lastName", "firstName", "middleName", "group", "button"});
-			setPaginationRecord(pagination, sessionInfo);
+			
+			List<DTOBase> userGroupList = new UserGroupDAO().getUserGroupList(false);
 			setSessionAttribute(UserDTO.SESSION_USER_PAGINATION, pagination);
 			setSessionAttribute(UserDTO.SESSION_USER + "_ACCESS", new UserDTO());
+			setSessionAttribute(UserGroupDTO.SESSION_USER_GROUP_LIST, userGroupList);
+			setPaginationRecord(pagination, sessionInfo, userGroupList);
 		}
 	}
 	
-	private void setPaginationRecord(Pagination pagination, SessionInfo sessionInfo) {
+	private void setPaginationRecord(Pagination pagination, SessionInfo sessionInfo, List<DTOBase> userGroupList) {
 		for(DTOBase dto: pagination.getCurrentPageRecordList()) {
 			UserDTO user = (UserDTO) dto;
-			UserGroupDTO userGroupDTO = new UserGroupDAO().getUserGroupByCode(user.getUserGroupCodes());
-			user.setPaginationRecord(new String[]{user.getCode(), user.getLastName(), user.getFirstName(), user.getMiddleName(),  userGroupDTO.getName() , UserAccessUtil.getRecordButtonStr(sessionInfo, user)});
+			String userGroups = "";
+			if(user.getUserGroupCodes().split("~").length == 0) {
+				userGroups = UserGroupUtil.getUserGroupStr(userGroupList, user.getUserGroupCodes());
+			}
+			else {
+				userGroups = UserGroupUtil.getUserGroupListStr(userGroupList, user.getUserGroupCodes().split("~"));
+			}
+			user.setPaginationRecord(new String[]{user.getCode(), user.getLastName(), user.getFirstName(), user.getMiddleName(), userGroups, UserAccessUtil.getRecordButtonStr(sessionInfo, user)});
 		}
 	}		
 }

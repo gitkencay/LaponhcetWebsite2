@@ -22,7 +22,7 @@ public class UpdateStudentConfirmAction extends ActionBase {
 		if(actionResponse.isSuccess()) {
 			Pagination pagination = (Pagination) getSessionAttribute(StudentDTO.SESSION_STUDENT_PAGINATION);
 			pagination.updateList((StudentDTO) getSessionAttribute(StudentDTO.SESSION_STUDENT), DAOBase.DAO_ACTION_UPDATE);
-			StudentUtil.setPaginationRecord(sessionInfo, pagination, (List<DTOBase>) getSessionAttribute(AcademicProgramDTO.SESSION_ACADEMIC_PROGRAM_LIST));
+			StudentUtil.setPaginationRecord(sessionInfo, pagination, (List<DTOBase>) getSessionAttribute(AcademicProgramDTO.SESSION_ACADEMIC_PROGRAM_LIST), false);
 		}
 		sessionInfo.setCurrentLink(sessionInfo.getListLink());
 	}

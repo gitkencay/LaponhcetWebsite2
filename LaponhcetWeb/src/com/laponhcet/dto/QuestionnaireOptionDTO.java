@@ -5,6 +5,9 @@ import com.mytechnopal.base.DTOBase;
 public class QuestionnaireOptionDTO extends DTOBase {
 	private static final long serialVersionUID = 1L;
 
+	public static final String SESSION_QUESTIONNAIRE_OPTION = "SESSION_QUESTIONNAIRE_OPTION";
+	public static final String SESSION_QUESTIONNAIRE_OPTION_LIST = "SESSION_QUESTIONNAIRE_OPTION_LIST";
+	
 	private String questionnaireCode;
 	private String description;
 	

@@ -20,11 +20,11 @@ public class RegisterDTO extends UserDTO {
 	private String institutionConnectedWith;
 	private String status;
 	private String repeatPassword;
-	
 
 	public RegisterDTO() {
 		super();
 		super.setBirthDate(DateTimeUtil.getStrToDateTime("1970-01-01", "yyyy-MM-dd"));
+		super.setTableName("register");
 		this.institutionConnectedWith = "";
 		this.status = REGISTER_STATUS_FOR_APPROVAL;
 		this.repeatPassword = "";
@@ -34,6 +34,7 @@ public class RegisterDTO extends UserDTO {
 		RegisterDTO register = new RegisterDTO();
 		register.setId(super.getId());
 		register.setCode(super.getCode());
+		register.setProfilePict(super.getProfilePict());
 		register.setPrefixName(super.getPrefixName());
 		register.setLastName(super.getLastName());
 		register.setFirstName(super.getFirstName());

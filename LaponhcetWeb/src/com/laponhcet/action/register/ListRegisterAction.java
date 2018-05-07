@@ -15,7 +15,7 @@ public class ListRegisterAction extends ActionBase {
 	protected void setSessionVars() {
 		sessionInfo.setTransitionLink(new String[] {"UE0012", "UE0002", "UE0007"}, new String[] {"UE0003", "UE0008", "UE0010"}, new String[] {"UE0004", "UE0009", "UE0011"}, "UE0005", "UE0006");
 		Pagination pagination = null;
-		if((!sessionInfo.isPreviousLinkView() && !sessionInfo.isPreviousLinkUpdate() && !sessionInfo.isPreviousLinkDeleteSubmit())) {
+		if((!sessionInfo.isPreviousLinkView() && !sessionInfo.isPreviousLinkUpdate() && !sessionInfo.isPreviousLinkDeleteSubmit() && !sessionInfo.isPreviousLinkUpdateConfirm())) {
 			pagination = new Pagination();
 			List<DTOBase> registerList = new RegisterDAO().getRegisterList();
 			pagination.setName(RegisterDTO.SESSION_REGISTER_PAGINATION);
@@ -30,16 +30,8 @@ public class ListRegisterAction extends ActionBase {
 		}
 		else {
 			pagination = (Pagination) getSessionAttribute(RegisterDTO.SESSION_REGISTER_PAGINATION);
-			
 		}
-		setPaginationRecord(pagination);
+		RegisterUtil.setPaginationRecord(sessionInfo, pagination);
 		setSessionAttribute(pagination.getName(), pagination);
 	}
-	
-	private void setPaginationRecord(Pagination pagination) {
-		for(DTOBase dto: pagination.getCurrentPageRecordList()) {
-			RegisterDTO register = (RegisterDTO) dto;
-			register.setPaginationRecord(new String[]{register.getLastName(), register.getFirstName(), register.getMiddleName(), RegisterUtil.getRegisterStatus(register), pagination.getLinkButtonStr(sessionInfo, register.getId()).replace("~", ",")});
-		}
-	}		
 }

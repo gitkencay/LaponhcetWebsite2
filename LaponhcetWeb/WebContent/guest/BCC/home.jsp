@@ -20,16 +20,57 @@
 					<li><a class="page-scroll" href="#news">News</a></li>
 					<li><a class="page-scroll" href="#events">Events</a></li>
 					<li><a class="page-scroll" href="#myFooter">Contact Us</a></li>
-					<li><a class="page-scroll" href="#">Log in</a></li>
+					<li><a data-toggle="modal" href="#modal-login">Login</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 </div>
+
+<div id="modal-login" class="modal fade" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-sm-6 b-r">
+						<h3 class="m-t-none m-b">Sign in</h3>
+						<p>Sign in today for more experience.</p>
+						<div class="form-group">
+							<label>User Name</label> <input name="txtUsernName" type="text"
+								placeholder="User Name" class="form-control">
+						</div>
+						<div class="form-group">
+							<label>Password</label> <input name="txtPassword" type="password"
+								placeholder="Password" class="form-control">
+						</div>
+						<div>
+							<button class="btn btn-sm btn-primary pull-right m-t-n-xs"
+								type="submit" onclick="openLink('G00002')">
+								<strong>Log in</strong>
+							</button>
+							<label> <input type="checkbox" class="i-checks">
+								Remember me
+							</label>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<h4>Not yet a member?</h4>
+						<p>Please Register</p>
+						<p class="text-center">
+							<a href="#register"
+								onblur="$('#modal-form').modal('hide');$('.modal-backdrop').remove();"><i
+								class="fa fa-sign-in big-icon"></i></a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="video">
 	<video style="margin: -5% 0;" autoplay loop class="" poster="">
 		<source style="" src="/static/BCC/bcc.mp4" type="video/mp4">
-		<source src="/static/BCC/bcc.ogg" type="video/ogg">
 	</video>
 </div>
 <div id="inSlider" class="carousel carousel-fade" data-ride="carousel">

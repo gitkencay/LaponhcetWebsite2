@@ -1,9 +1,7 @@
 package com.laponhcet.action.message;
 
 import com.laponhcet.dao.MessageDAO;
-import com.laponhcet.dao.MessageSMSDAO;
 import com.laponhcet.dto.MessageDTO;
-import com.laponhcet.dto.MessageSMSDTO;
 import com.mytechnopal.base.ActionBase;
 import com.mytechnopal.base.DAOBase;
 

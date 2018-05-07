@@ -3,14 +3,26 @@ package com.laponhcet.util;
 import java.io.Serializable;
 import java.util.List;
 import com.laponhcet.dto.RegisterDTO;
+import com.mytechnopal.Pagination;
 import com.mytechnopal.SessionInfo;
 import com.mytechnopal.base.DTOBase;
+import com.mytechnopal.dao.MediaDAO;
+import com.mytechnopal.dto.MediaDTO;
 import com.mytechnopal.dto.UserDTO;
 import com.mytechnopal.util.UserUtil;
 
 
 public class RegisterUtil implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	public static void setPaginationRecord(SessionInfo sessionInfo, Pagination pagination) {
+		for(DTOBase dto: pagination.getCurrentPageRecordList()) {
+			RegisterDTO register = (RegisterDTO) dto;
+			MediaDTO profilePict = new MediaDAO().getMediaByCodeTableField(register.getCode(), register.getTableName(), "PROFILE_PICT");
+			register.setProfilePict(profilePict == null?register.getProfilePict():profilePict);
+			register.setPaginationRecord(new String[]{register.getLastName(), register.getFirstName(), register.getMiddleName(), RegisterUtil.getRegisterStatus(register), pagination.getLinkButtonStr(sessionInfo, register.getId()).replace("~", ",")});
+		}
+	}		
 	
 	public static void setRegisterList(List<DTOBase> registerList) {
 		for(DTOBase registerObj: registerList) {
@@ -20,7 +32,9 @@ public class RegisterUtil implements Serializable {
 	}
 	
 	public static void setRegister(RegisterDTO register, UserDTO user) {
-		register.setUserGroup(user.getUserGroup());
+		MediaDTO profilePict = new MediaDAO().getMediaByCodeTableField(user.getCode(), register.getTableName(), "PROFILE_PICT");
+		register.setProfilePict(profilePict == null?user.getProfilePict():profilePict);
+		register.setUserGroupCodes(user.getUserGroupCodes());
 		register.setLastName(user.getLastName());
 		register.setFirstName(user.getFirstName());
 		register.setMiddleName(user.getMiddleName());
@@ -37,7 +51,7 @@ public class RegisterUtil implements Serializable {
 	
 	public static UserDTO getUserByRegister(RegisterDTO register){
 		UserDTO user = new UserDTO();
-		user.getUserGroup().setCode(register.getUserGroup().getCode());
+		user.setUserGroupCodes(register.getUserGroupCodes());
 		user.setLastName(register.getLastName());
 		user.setFirstName(register.getFirstName());
 		user.setMiddleName(register.getMiddleName());
