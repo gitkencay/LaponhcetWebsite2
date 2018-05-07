@@ -18,7 +18,7 @@
 <input type="hidden" name="txtCheckedAcademicProgramCodes" id="txtCheckedAcademicProgramCodes" value="<%=staff.getAcademicProgramCodes()%>"/>
 <div class="col-sm-12">
 	<div class="col-sm-3 no-padding">
-		<%=new FileInputWebControl().getFileInputWebControl(sessionInfo, "col-sm-12", false, "Profile Picture", "ProfilePict", false, staff.getProfilePict(), 1024000, FileUtil.IMG_FILENAME_EXT_LIST, 240, 280, null, "") %>
+		<%=new FileInputWebControl().getFileInputWebControl(sessionInfo, "col-sm-12", false, "Profile Picture", "ProfilePict", false, staff.getProfilePict().getPict(), 1024000, FileUtil.IMG_FILENAME_EXT_LIST, 240, 280, null, "") %>
 	</div>
 	<div class="col-sm-9">
 		<div class="col-sm-3 no-padding">
@@ -42,7 +42,13 @@
 		<div class="col-sm-3 no-padding"></div>
 		<%= new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-4", true, "Program Graduated", "Program Graduated", "ProgramGraduated", staff.getProgramGraduated(), 45, TextBoxWebControl.DATA_TYPE_STRING, "") %>
 		<%= new TextBoxWebControl().getTextBoxWebControl(sessionInfo, "col-sm-5 no-padding", true, "Email Address", "Email Address", "EmailAddress", staff.getEmailAddress(), 45, TextBoxWebControl.DATA_TYPE_STRING, "") %>
-		<%= StaffUtil.getTableWithLabel(sessionInfo, "Academic Program", "AcademicProgram", true, academicProgramList, staff.getAcademicProgramCodes(), "", 8, "border-left-right border-top-bottom p-xs b-r-md") %>
+		<%
+		if(SettingsUtil.OWNER_CODE.equalsIgnoreCase(SettingsUtil.OWNER_CODE_FBC) || SettingsUtil.OWNER_CODE.equalsIgnoreCase(SettingsUtil.OWNER_CODE_BCC) || SettingsUtil.OWNER_CODE.equalsIgnoreCase(SettingsUtil.OWNER_CODE_FAST)) {
+		%>
+			<%= StaffUtil.getTableWithLabel(sessionInfo, "Academic Program", "AcademicProgram", true, academicProgramList, staff.getAcademicProgramCodes(), "", 8, "border-left-right border-top-bottom p-xs b-r-md") %>
+		<%	
+		}
+		%>
 	</div>
 </div>
 <div class="col-sm-12 no-padding">
